@@ -1,0 +1,678 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <link rel="icon" href="./imgs/IconNavegate.png" type="image/png">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Bevan:ital@0;1&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap"
+        rel="stylesheet">
+
+    <title>Cutelaria Pets</title>
+
+    <meta property="og:title" content="Cutelaria Pets Especializada | Afiação e Manutenção de Máquinas e Tesouras">
+    <meta property="og:description"
+        content="Especialistas em afiação e manutenção Atendimento de qualidade para pet shops e groomers.">
+    <meta property="og:description" content="João Pessoa - R. José Francisco da Silva, 2094 - Cristo Redentor">
+    <meta property="og:type" content="website">
+    <meta property="og:image" content=./imgs/CTLogo.jpg>
+
+</head>
+
+<body>
+
+    <!-- MODAL DE COMPRA -->
+    <div class="ProductModalOverlay" id="ProductModal">
+        <div class="ProductModalBox">
+
+            <!-- botão fechar -->
+            <button class="ProductModalClose" onclick="closeProductModal()">
+                &times;
+            </button>
+
+            <div class="ProductModalContent">
+
+                <!-- lado esquerdo -->
+                <div class="ProductModalInfo">
+                    <span class="ProductModalBrand" id="modalProductBrand"></span>
+
+                    <h2 class="ProductModalTitle" id="modalProductTitle"></h2>
+
+                    <div class="ProductModalPrice" id="modalProductPrice"></div>
+
+                    <p class="ProductModalInstallment" id="modalProductInstallment"></p>
+
+                    <p class="ProductModalDescription" id="modalProductDescription"></p>
+
+                    <ul class="ProductModalSpecs" id="modalProductSpecs"></ul>
+
+                    <button class="ProductModalBuyBtn" id="modalBuyBtn">
+                        Comprar agora
+                    </button>
+                </div>
+
+                <!-- lado direito -->
+                <div class="ProductModalGallery">
+                    <button class="ProductGalleryArrow left" type="button" onclick="prevModalImage()">
+                        &#10094;
+                    </button>
+
+                    <img class="ProductImagePlaceholder" id="modalProductImage" src="" alt="">
+
+                    <button class="ProductGalleryArrow right" type="button" onclick="nextModalImage()">
+                        &#10095;
+                    </button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+
+    <section class="hero-section">
+        <header class="hero-header">
+            <div class="hero-logo">
+                <img class="LogoCutelaria" src="./imgs/CTLogo.png" alt="Logo-cutelariapets">
+            </div>
+
+            <div class="NavHeader">
+                <p class="LinkHEader" id="LinkAbout">Sobre Nós</p>
+                <p class="LinkHEader" id="LinkProducts">Produtos</p>
+                <p class="LinkHEader" id="LinkProcess">Processo</p>
+                <p class="LinkHEader" id="LinkLocate">Localização</p>
+                <p class="LinkHEader" id="FAQLocate">FAQ</p>
+            </div>
+
+            <div class="cart-icon"> <i class="fa-solid fa-cart-shopping"></i> <span class="cart-badge">0</span> </div>
+        </header>
+
+        <div class="hero-container">
+            <div class="hero-content">
+                <span class="hero-kicker" data-aos="fade-down" data-aos-duration="800">AFIAÇÃO • MANUTENÇÃO •
+                    ASSISTÊNCIA TÉCNICA</span>
+
+                <h1 class="hero-title" data-aos="fade-down" data-aos-delay="300" data-aos-duration="800">
+                    Equipamentos parados <span>fazem seu pet shop perder dinheiro.</span>
+                </h1>
+
+                <p class="hero-description" data-aos="fade-down" data-aos-delay="500" data-aos-duration="800">
+                    Recuperamos lâminas, tesouras e equipamentos de banho e tosa para que sua equipe
+                    continue produzindo com máxima eficiência, segurança e precisão.
+                </p>
+
+                <div class="hero-actions">
+                    <a href="https://wa.me/558396166367" data-aos="fade-down" data-aos-delay="700"
+                        data-aos-duration="800" target="_blank" class="hero-btn primary">Solicitar
+                        orçamento</a>
+                    <button href="#servicos" class="hero-btn secondary" data-aos="fade-down" data-aos-delay="900"
+                        data-aos-duration="800" id="scrollToServicesBtn">Ver serviços</button>
+                </div>
+
+            </div>
+
+            <img class="hero-main-image" src="./imgs/Sec1image.png" data-aos="zoom-out" data-aos-duration="800"
+                data-aos-delay="900" alt="Afiação de tesouras e manutenção de equipamentos pet">
+
+        </div>
+    </section>
+
+    <div class="categories-container">
+        <nav class="categories-bar">
+            <button class="category-btn active" data-category="all">
+                Todos</button>
+            <button class="category-btn" data-category="Lâminas">
+                Lâminas</button>
+            <button class="category-btn" data-category="Tesouras"> Tesouras</button>
+            <button class="category-btn" data-category="Secadores">
+                Secadores</button>
+            <button class="category-btn" data-category="Sopradores">
+                Sopradores</button>
+            <button class="category-btn" data-category="Acessórios">
+                Acessórios</button>
+        </nav>
+    </div>
+
+    <div class="cart-overlay"></div>
+    <aside class="cart-sidebar">
+        <div class="cart-header">
+            <h3>Meu Carrinho <i class="fa-solid fa-cart-shopping"></i></h3> <button
+                class="close-cart-btn">&times;</button>
+        </div>
+        <div class="cart-body"></div>
+
+        <div class="cart-footer">
+            <div class="options-toggle">
+                <button class="delivery-btn active" data-option="delivery"><i class="fa-solid fa-truck-fast"></i>
+                    Entrega</button>
+                <button class="delivery-btn" data-option="pickup"><i class="fa-solid fa-store"></i> Retirada</button>
+            </div>
+
+            <div id="delivery-form-container">
+                <div class="form-group"><label for="delivery-name">Seu Nome</label><input type="text" id="delivery-name"
+                        placeholder="Nome e sobrenome" required></div>
+                <div class="form-group"><label for="delivery-phone">Seu Telefone (WhatsApp)</label><input type="tel"
+                        id="delivery-phone" placeholder="(XX) XXXXX-XXXX" maxlength="15" required></div>
+                <div class="form-group"><label for="delivery-cep">CEP</label><input type="text" id="delivery-cep"
+                        placeholder="00000-000" maxlength="9" required></div>
+                <div class="form-group"><label for="delivery-address">Endereço</label><textarea id="delivery-address"
+                        placeholder="Lote, Quadra, Numero" required></textarea>
+                </div>
+                <div class="delivery-fee-notice">A taxa de entrega será calculada de acordo com a sua região.</div>
+
+                <div class="payment-options-container">
+                    <h4>Forma de Pagamento</h4>
+                    <label class="payment-option selected"><input type="radio" name="payment" value="PIX" checked>
+                        PIX</label>
+                    <label class="payment-option"><input type="radio" name="payment" value="Cartão de Crédito"> Cartão
+                        de Crédito</label>
+                    <label class="payment-option"><input type="radio" name="payment" value="Cartão de Débito"> Cartão de
+                        Débito</label>
+                    <label class="payment-option"><input type="radio" name="payment" value="Dinheiro"> Dinheiro</label>
+
+                    <div id="troco-container">
+                        <div class="form-group"><label for="troco-para">Precisa de troco para quanto?</label><input
+                                type="number" id="troco-para" placeholder="Ex: 50"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="pickup-form-container" style="display: none;">
+                <div class="form-group"><label for="pickup-name">Nome para Retirada</label><input type="text"
+                        id="pickup-name" placeholder="Digite nome e sobrenome" required></div>
+                <div class="form-group">
+                    <label>Agende a Data e Hora</label>
+                    <div class="date-time-row">
+                        <input type="date" id="pickup-date" required>
+                        <select id="pickup-time" required>
+                            <option value="" disabled selected>Selecione</option>
+                            <option value="08:00">08:00</option>
+                            <option value="09:00">09:00</option>
+                            <option value="10:00">10:00</option>
+                            <option value="11:00">11:00</option>
+                            <option value="12:00">12:00</option>
+                            <option value="13:00">13:00</option>
+                            <option value="14:00">14:00</option>
+                            <option value="15:00">15:00</option>
+                            <option value="16:00">16:00</option>
+                            <option value="17:00">17:00</option>
+                            <option value="18:00">18:00</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div class="coupon-container"><input type="text" id="coupon-input" placeholder="Cupom de desconto"><button
+                    id="apply-coupon-btn">Aplicar</button></div>
+            <p id="coupon-feedback" class="coupon-feedback"></p>
+            <div class="cart-summary">
+                <div class="summary-line"><span>Subtotal</span><span id="cart-subtotal">R$ 0,00</span></div>
+                <div class="summary-line discount-line" style="display: none;"><span>Desconto</span><span
+                        id="cart-discount">- R$ 0,00</span></div>
+                <div class="summary-line total"><span>Total</span><span id="cart-total">R$ 0,00</span></div>
+            </div>
+        </div>
+
+        <div class="finish-order-btn-container">
+            <button id="finish-order-btn" class="finish-order-btn" disabled><i class="fab fa-whatsapp"></i> Finalizar
+                Pedido</button>
+        </div>
+    </aside>
+
+    <div class="view-cart-banner">
+        <p>Total: <span id="banner-total">R$ 0,00</span></p>
+        <button class="view-cart-banner-btn">Ver Carrinho</button>
+    </div>
+
+    <main class="products" id="ProductsSection">
+        <div class="search-container"> <input placeholder="Buscar Produto..." class="search-input"> <i
+                class="fa-solid fa-magnifying-glass"></i> </div>
+        <div class="products-container"></div>
+    </main>
+
+    <section class="SectionAbout" id="SectionAbout">
+        <img class="AboutImage" src="./imgs/AboutImage.png" data-aos="zoom-out" data-aos-duration="800"
+            alt="image-example-bussines">
+
+        <div class="TextsAbout">
+            <p class="TitleAbout" data-aos="fade-down" data-aos-delay="300" data-aos-duration="800">SOBRE NÓS</p>
+            <h2 class="H2About" data-aos="fade-down" data-aos-delay="500" data-aos-duration="800">Desde 2023 resolvendo
+                o que os outros não conseguem</h2>
+            <p class="PAbout" data-aos="fade-down" data-aos-delay="700" data-aos-duration="800">A Vantagem Técnica
+                nasceu dentro do mercado pet, atendendo tosadores que precisavam de um
+                padrão de
+                afiação que não existia. Hoje, somos referência em afiação de Lâminas, tesouras e assistência técnica de
+                equipamentos de banho e tosa.</p>
+
+            <ul class="ULAbout" data-aos="fade-down" data-aos-delay="900" data-aos-duration="800">
+                <li class="LiAbout">Foco 100% no mercado profissional pet</li>
+                <li class="LiAbout">Ferramentas de afiação industriais de alta precisão</li>
+                <li class="LiAbout">Compromisso com prazo e garantia em todos os serviços</li>
+            </ul>
+        </div>
+    </section>
+
+    <section class="services-section" id="servicos">
+        <div class="services-container">
+
+            <div class="services-header">
+                <div class="services-header-left">
+                    <span class="services-label" data-aos="fade-down" data-aos-duration="800">
+                        SERVIÇOS
+                    </span>
+
+                    <h2 data-aos="fade-down" data-aos-delay="200" data-aos-duration="800">
+                        Tudo o que seu equipamento
+                        precisa em um único lugar.
+                    </h2>
+                </div>
+
+                <a href="#contato" class="services-link">
+                    Orçar todos os serviços →
+                </a>
+            </div>
+
+
+            <div class="services-grid">
+
+                <!-- CARD 01 -->
+                <div data-aos="flip-right" data-aos-delay="200" data-aos-duration="800">
+                    <article class="service-card">
+
+                        <div class="service-top">
+                            <span class="service-number">01</span>
+                            <div class="service-icon-box"></div>
+                        </div>
+
+                        <h3>Afiação de Lâminas</h3>
+
+                        <p class="service-description">
+                            Afiação de lâminas padrão A5 e lâminas de acabamento
+                            Bravura, Pro7, A11S e Pro6, com retífica de precisão,
+                            polimento e teste de corte.
+                        </p>
+
+                        <div class="service-divider"></div>
+
+                        <div class="service-prices">
+
+                            <div class="service-price-item">
+                                <span>Afiação de lâmina comum</span>
+                                <strong>R$ 25,00</strong>
+                            </div>
+
+                            <div class="service-price-item">
+                                <span>Afiação de lâmina de acabamento</span>
+                                <strong>R$ 45,00</strong>
+                            </div>
+
+                        </div>
+
+                    </article>
+                </div>
+
+
+                <!-- CARD 02 -->
+                <div data-aos="flip-right" data-aos-delay="400" data-aos-duration="800">
+                    <article class="service-card">
+
+                        <div class="service-top">
+                            <span class="service-number">02</span>
+                            <div class="service-icon-box"></div>
+                        </div>
+
+                        <h3>Afiação de Tesouras</h3>
+
+                        <p class="service-description">
+                            Afiação, alinhamento, regulagem e acabamento para
+                            garantir cortes precisos e suaves.
+                        </p>
+
+                        <div class="service-divider"></div>
+
+                        <div class="service-prices">
+
+                            <div class="service-price-item">
+                                <span>Tesoura Reta / Curva</span>
+                                <strong>R$ 35,00</strong>
+                            </div>
+
+                            <div class="service-price-item">
+                                <span>Tesoura Semidentada / Tubarão</span>
+                                <strong>R$ 40,00</strong>
+                            </div>
+
+                            <div class="service-price-item">
+                                <span>Semidentada Curva / Tubarão Curva</span>
+                                <strong>R$ 45,00</strong>
+                            </div>
+
+                        </div>
+
+                    </article>
+                </div>
+
+
+                <!-- CARD 03 -->
+                <div data-aos="flip-right" data-aos-delay="600" data-aos-duration="800">
+                    <article class="service-card">
+
+                        <div class="service-top">
+                            <span class="service-number">03</span>
+                            <div class="service-icon-box"></div>
+                        </div>
+
+                        <h3>Assistência Técnica</h3>
+
+                        <p class="service-description">
+                            Assistência técnica para máquinas de tosa,
+                            secadores e sopradores, com manutenção preventiva
+                            e corretiva.
+                        </p>
+
+                        <div class="service-divider"></div>
+
+                        <div class="service-prices">
+
+                            <div class="service-price-item">
+                                <span>Manutenção de soprador — 2 motores</span>
+                                <strong>R$ 110,00</strong>
+                            </div>
+
+                            <div class="service-price-item">
+                                <span>Manutenção de soprador — 1 motor</span>
+                                <strong>R$ 90,00</strong>
+                            </div>
+
+                            <div class="service-price-item">
+                                <span>Manutenção de secadores</span>
+                                <strong>R$ 90,00</strong>
+                            </div>
+
+                        </div>
+
+                    </article>
+                </div>
+
+            </div>
+
+        </div>
+    </section>
+
+    <section class="SectionAB">
+
+        <div class="MainSecAB">
+            <div class="HeaderSercAB">
+
+                <p class="TitleSecAB">ANTES E DEPOIS</p>
+                <h2 class="H2SevAB">O resultado fala
+                    por si</h2>
+                <p class="PSecAB">Lâminas e tesouras
+                    que pareciam descartáveis, recuperadas com padrão de fábrica</p>
+            </div>
+
+            <div class="SecShowAB">
+                <div class="ShowABvideo">
+                    <video autoplay muted loop playsinline class="VideoAB">
+                        <source src="./vid/Laminas.mp4" type="video/mp4">
+                        Seu navegador não suporta vídeos.
+                    </video>
+
+                    <div class="TextsShowAB">
+                        <p class="pShowAB1">Lâmina recuperada</p>
+                        <p class="pShowAB2">Antes: agarrando pelo. Depois: Corte deslizante</p>
+                    </div>
+                </div>
+
+                <div class="ShowABvideo">
+                    <video autoplay muted loop playsinline class="VideoAB">
+                        <source src="./vid/Tesouras.mp4" type="video/mp4">
+                        Seu navegador não suporta vídeos.
+                    </video>
+
+                    <div class="TextsShowAB">
+                        <p class="pShowAB1">Tesoura recuperada</p>
+                        <p class="pShowAB2">Antes: dobrando pelo. Depois: Corte deslizante</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </section>
+
+    <section class="processo" id="ProcessSection">
+        <div class="processo-container">
+            <span class="processo-tag" data-aos="fade-down" data-aos-duration="800">COMO FUNCIONA</span>
+
+            <h2 class="processo-titulo" data-aos="fade-down" data-aos-delay="200" data-aos-duration="800">
+                Processo transparente em 5 etapas técnicas.
+            </h2>
+
+            <div class="processo-linha">
+                <div class="linha-bg"></div>
+
+                <div class="processo-grid">
+
+
+                    <div class="etapa" data-aos="flip-right" data-aos-delay="200" data-aos-duration="800">
+                        <div class="numero">01</div>
+                        <h3>COLETA</h3>
+                        <p>Coletamos seu Equipamento e deixamos um de Emprestimo.</p>
+                    </div>
+
+                    <div class="etapa" data-aos="flip-right" data-aos-delay="400" data-aos-duration="800">
+                        <div class="numero">02</div>
+                        <h3>ORÇAMENTO</h3>
+                        <p>Aprovação rápida com transparência total.</p>
+                    </div>
+
+                    <div class="etapa" data-aos="flip-right" data-aos-delay="600" data-aos-duration="800">
+                        <div class="numero">03</div>
+                        <h3>EXECUÇÃO</h3>
+                        <p>Serviço com ferramentas profissionais.</p>
+                    </div>
+
+                    <div class="etapa" data-aos="flip-right" data-aos-delay="800" data-aos-duration="800">
+                        <div class="numero">04</div>
+                        <h3>TESTES</h3>
+                        <p>Controle de qualidade e ajustes finos.</p>
+                    </div>
+
+                    <div class="etapa active" data-aos="flip-right" data-aos-delay="1000" data-aos-duration="800">
+                        <div class="numero">05</div>
+                        <h3>DEVOLUÇÃO</h3>
+                        <p>Entregamos o Equipamento pronto para alta produção.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+    <section class="SectionProblems">
+        <div class="MainSecProblems">
+            <p class="TitleSecProblems" data-aos="fade-down" data-aos-duration="800">OS SINTOMAS</p>
+            <h2 class="H2SecProblems" data-aos="fade-down" data-aos-delay="200" data-aos-duration="800">Você reconhece
+                algum desses problemas no seu pet shop?</h2>
+
+            <div class="BoxSecProblems">
+                <div class="boxProblems" data-aos="zoom-out" data-aos-delay="200" data-aos-duration="800">
+                    <p class="ProblemP1">01 / DIAGNÓSTICO</p>
+                    <p class="ProblemP2">Lâminas que puxam pelo</p>
+                    <p class="ProblemP3">Desgaste irregular aumenta o tempo da tosa, estressa o animal e compromete o
+                        acabamento</p>
+                </div>
+
+                <div class="boxProblems" data-aos="zoom-out" data-aos-delay="400" data-aos-duration="800">
+                    <p class="ProblemP1">02 / DESEMPENHO</p>
+                    <p class="ProblemP2">Máquinas sem potência</p>
+                    <p class="ProblemP3">Superaquecimento, ruído e perda de torque indicam falha mecânica iminente</p>
+                </div>
+
+                <div class="boxProblems" data-aos="zoom-out" data-aos-delay="600" data-aos-duration="800">
+                    <p class="ProblemP1">03 / PRECISÃO</p>
+                    <p class="ProblemP2">Tesouras desalinhadas</p>
+                    <p class="ProblemP3">Cortes que mascam o pelo geram retrabalho e prejudicam a reputação do seu
+                        serviço</p>
+                </div>
+
+                <div class="boxProblems" data-aos="zoom-out" data-aos-delay="800" data-aos-duration="800">
+                    <p class="ProblemP1">04 / FLUXO DE AR</p>
+                    <p class="ProblemP2">Secadores fracos</p>
+                    <p class="ProblemP3">Resistências e turbinas comprometidas dobram o tempo de secagem por animal</p>
+                </div>
+
+                <div class="boxProblems" data-aos="zoom-out" data-aos-delay="1000" data-aos-duration="800">
+                    <p class="ProblemP1">05 / OPERAÇÃO</p>
+                    <p class="ProblemP2">Sopradores barulhentos</p>
+                    <p class="ProblemP3">Perda de potência e superaquecimento podem indicar a necessidade de manutenção
+                        no equipamento
+                    </p>
+                </div>
+
+                <div class="boxProblems" data-aos="zoom-out" data-aos-delay="1200" data-aos-duration="800">
+                    <p class="ProblemP1">06 / NEGÓCIO</p>
+                    <p class="ProblemP2">Equipamento parado</p>
+                    <p class="ProblemP3">Cada hora sem o equipamento certo é faturamento que sai pela porta do seu
+                        petshop</p>
+                </div>
+
+            </div>
+
+            <p class="TextProblem" data-aos="zoom-out" data-aos-delay="200" data-aos-duration="800">Cada um desses
+                sinais representa horas de produtividade perdidas. <b class="GrennB">Nós Resolvemos</b></p>
+        </div>
+    </section>
+
+    <section class="SectionCall" id="LocateSection">
+        <h1 class="TitleSecCall" data-aos="fade-down" data-aos-duration="800">NÃO DEIXE EQUIPAMENTOS PARADOS REDUZIREM O
+            FATURAMENTO DO SEU PETSHOP</h1>
+
+        <a class="LinkSecCall" href="https://wa.me/558396166367" target="_blank" data-aos="fade-down"
+            data-aos-delay="200" data-aos-duration="800">SOCILICAR ORÇAMENTO PELO WHATSAPP</a>
+
+        <p class="LocateP">João Pessoa - R. José Francisco da Silva, 2094 - Cristo Redentor</p>
+
+        <div class="DivMapLocal">
+
+            <iframe class="MapLocal"
+                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2030.7708834768343!2d-34.870086205260336!3d-7.160434211050538!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x7ace9038924f3a9%3A0x66a88f73d58a63e8!2sCutelaria%20Pets!5e1!3m2!1spt-BR!2sbr!4v1784832445059!5m2!1spt-BR!2sbr"
+                width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy"
+                referrerpolicy="strict-origin-when-cross-origin"></iframe>
+
+        </div>
+    </section>
+
+    <section class="FaqSection" id="FAQSection">
+        <div class="FaqContainer">
+            <div class="FaqHeader">
+                <h2 class="FaqTitle" data-aos="fade-down" data-aos-duration="800">Perguntas frequentes</h2>
+            </div>
+
+            <div class="FaqList">
+                <div class="FaqItem" data-aos="fade-down" data-aos-delay="200" data-aos-duration="800">
+                    <button class="FaqQuestion">
+                        <span>Quanto tempo demora o serviço?</span>
+                        <span class="FaqIcon">+</span>
+                    </button>
+                    <div class="FaqAnswer">
+                        <p>
+                            O prazo para realização do serviço é de 24 a 72 horas, após o recebimento do equipamento,
+                            dependendo do serviço realizado.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="FaqItem" data-aos="fade-down" data-aos-delay="300" data-aos-duration="800">
+                    <button class="FaqQuestion">
+                        <span>Existe garantia?</span>
+                        <span class="FaqIcon">+</span>
+                    </button>
+                    <div class="FaqAnswer">
+                        <p>
+                            Sim. Todos os serviços têm garantia. Se o equipamento não atender ao esperado,
+                            refazemos sem custo adicional.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="FaqItem" data-aos="fade-down" data-aos-delay="400" data-aos-duration="800">
+                    <button class="FaqQuestion">
+                        <span>Como envio meus equipamentos?</span>
+                        <span class="FaqIcon">+</span>
+                    </button>
+                    <div class="FaqAnswer">
+                        <p>
+                            Você pode enviar via correios, transportadora ou, em algumas regiões,
+                            agendar coleta. Orientamos pelo WhatsApp.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="FaqItem" data-aos="fade-down" data-aos-delay="500" data-aos-duration="800">
+                    <button class="FaqQuestion" style="display: none;">
+                        <span>Vocês atendem outras cidades?</span>
+                        <span class="FaqIcon">+</span>
+                    </button>
+                    <div class="FaqAnswer">
+                        <p>
+                            Sim. Atendemos pet shops, clínicas e tosadores em todo o território nacional
+                            via envio postal.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="FaqItem" data-aos="fade-down" data-aos-delay="700" data-aos-duration="800">
+                    <button class="FaqQuestion">
+                        <span>Quando devo fazer manutenção preventiva?</span>
+                        <span class="FaqIcon">+</span>
+                    </button>
+                    <div class="FaqAnswer">
+                        <p>
+                            Recomendamos a cada 3 a 6 meses, dependendo do volume de uso.
+                            Isso evita paradas e prolonga a vida útil.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="FaqItem" data-aos="fade-down" data-aos-delay="800" data-aos-duration="800">
+                    <button class="FaqQuestion">
+                        <span>Vale a pena recuperar meu equipamento antigo?</span>
+                        <span class="FaqIcon">+</span>
+                    </button>
+                    <div class="FaqAnswer">
+                        <p>
+                            Na maioria dos casos, sim. Fazemos um diagnóstico técnico e indicamos
+                            se vale a recuperação ou substituição.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <p>2025 - Cutelaria Pets. Todos os direitos reservados</p>
+        <a href="https://ocriadordesite.com.br/" target="_blank">Desenvolvido por <b>OCriadorDeSites</b></a>
+    </footer>
+
+
+
+</body>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+<script src="./script.js"></script>
+<script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+<script>
+    AOS.init();
+</script>
+
+
+</html>

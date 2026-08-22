@@ -1,0 +1,1729 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+  <meta charset="UTF-8">
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Seed Firebase – Catálogo</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: #0f0f0f;
+      color: #eee;
+
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+
+      min-height: 100vh;
+
+      padding: 24px;
+    }
+
+    h1 {
+      font-size: 1.4rem;
+      margin-bottom: 8px;
+      color: #f0c040;
+      text-align: center;
+    }
+
+    p {
+      font-size: .9rem;
+      color: #aaa;
+      margin-bottom: 24px;
+      text-align: center;
+      max-width: 520px;
+      line-height: 1.5;
+    }
+
+    .auth-container {
+      width: 100%;
+      max-width: 420px;
+
+      background: #1a1a1a;
+
+      border: 1px solid #333;
+
+      border-radius: 10px;
+
+      padding: 20px;
+
+      margin-bottom: 20px;
+    }
+
+    .auth-title {
+      font-size: 1rem;
+      font-weight: 700;
+
+      margin-bottom: 14px;
+
+      color: #fff;
+    }
+
+    .input-group {
+      margin-bottom: 12px;
+    }
+
+    .input-group label {
+      display: block;
+
+      font-size: .8rem;
+
+      color: #aaa;
+
+      margin-bottom: 6px;
+    }
+
+    .input-group input {
+      width: 100%;
+
+      padding: 11px 12px;
+
+      border-radius: 7px;
+
+      border: 1px solid #444;
+
+      background: #111;
+
+      color: #fff;
+
+      outline: none;
+
+      font-size: .9rem;
+    }
+
+    .input-group input:focus {
+      border-color: #f0c040;
+    }
+
+    .auth-buttons {
+      display: flex;
+      gap: 10px;
+
+      margin-top: 14px;
+    }
+
+    #loginBtn,
+    #logoutBtn,
+    #seedBtn {
+
+      padding: 12px 20px;
+
+      border: none;
+
+      border-radius: 7px;
+
+      cursor: pointer;
+
+      font-size: .9rem;
+
+      font-weight: 700;
+
+      transition: opacity .2s;
+    }
+
+    #loginBtn {
+      width: 100%;
+
+      background: #f0c040;
+
+      color: #000;
+    }
+
+    #logoutBtn {
+
+      background: #333;
+
+      color: #fff;
+
+      display: none;
+    }
+
+    #seedBtn {
+
+      padding: 14px 36px;
+
+      background: #f0c040;
+
+      color: #000;
+
+      font-size: 1rem;
+    }
+
+    #loginBtn:hover,
+    #logoutBtn:hover,
+    #seedBtn:hover {
+      opacity: .85;
+    }
+
+    #loginBtn:disabled,
+    #logoutBtn:disabled,
+    #seedBtn:disabled {
+      opacity: .45;
+
+      cursor: not-allowed;
+    }
+
+    .user-status {
+
+      display: none;
+
+      margin-top: 12px;
+
+      padding: 10px;
+
+      border-radius: 6px;
+
+      background: #111;
+
+      color: #4caf50;
+
+      font-size: .8rem;
+
+      word-break: break-word;
+    }
+
+    .seed-container {
+      display: flex;
+
+      flex-direction: column;
+
+      align-items: center;
+
+      width: 100%;
+    }
+
+    #seedBtn {
+      margin-bottom: 0;
+    }
+
+    #log {
+
+      margin-top: 24px;
+
+      width: 100%;
+
+      max-width: 540px;
+
+      background: #1a1a1a;
+
+      border: 1px solid #333;
+
+      border-radius: 8px;
+
+      padding: 16px;
+
+      font-size: .8rem;
+
+      font-family: monospace;
+
+      max-height: 360px;
+
+      overflow-y: auto;
+    }
+
+    .ok {
+      color: #4caf50;
+    }
+
+    .err {
+      color: #f44336;
+    }
+
+    .info {
+      color: #90caf9;
+    }
+
+    .warning {
+      color: #ffb74d;
+    }
+  </style>
+</head>
+
+
+<body>
+
+  <h1>
+    🔥 Seed de Produtos – Catálogo
+  </h1>
+
+  <p>
+    Faça login com o usuário administrador do Firebase
+    e depois envie os produtos, categorias e cupom para
+    o Firestore. Executar novamente não duplica os
+    produtos, pois os mesmos IDs serão reutilizados.
+  </p>
+
+
+  <!-- ======================================================
+         AUTENTICAÇÃO
+    ======================================================= -->
+
+  <div class="auth-container">
+
+    <div class="auth-title">
+      🔐 Autenticação do administrador
+    </div>
+
+
+    <div class="input-group">
+
+      <label for="email">
+        E-mail
+      </label>
+
+      <input type="email" id="email" placeholder="admin@email.com" autocomplete="username">
+
+    </div>
+
+
+    <div class="input-group">
+
+      <label for="senha">
+        Senha
+      </label>
+
+      <input type="password" id="senha" placeholder="Sua senha" autocomplete="current-password">
+
+    </div>
+
+
+    <div class="auth-buttons">
+
+      <button id="loginBtn">
+        🔐 Entrar
+      </button>
+
+      <button id="logoutBtn">
+        Sair
+      </button>
+
+    </div>
+
+
+    <div id="userStatus" class="user-status"></div>
+
+  </div>
+
+
+  <!-- ======================================================
+         SEED
+    ======================================================= -->
+
+  <div class="seed-container">
+
+    <button id="seedBtn" disabled>
+      🚀 Enviar Produtos ao Firebase
+    </button>
+
+  </div>
+
+
+  <!-- ======================================================
+         LOG
+    ======================================================= -->
+
+  <div id="log">
+
+    <span class="info">
+      Aguardando autenticação...
+    </span>
+
+  </div>
+
+
+  <!-- ======================================================
+         FIREBASE
+    ======================================================= -->
+
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+
+
+  <script>
+
+    // ============================================================
+    // FIREBASE CONFIG
+    // ============================================================
+    // Coloque aqui as credenciais do seu projeto Firebase.
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyBJjLLf0XxnyT0lwE9WwYepaXGnnWprUpc",
+      authDomain: "hb-cutelariapets.firebaseapp.com",
+      projectId: "hb-cutelariapets",
+      storageBucket: "hb-cutelariapets.firebasestorage.app",
+      messagingSenderId: "692195779876",
+      appId: "1:692195779876:web:6e7cfe6a1a64f53bcf7fb1"
+
+    };
+
+
+    // ============================================================
+    // INICIALIZAÇÃO
+    // ============================================================
+
+    firebase.initializeApp(
+      firebaseConfig
+    );
+
+
+    const auth =
+      firebase.auth();
+
+
+    const db =
+      firebase.firestore();
+
+
+    // ============================================================
+    // ELEMENTOS
+    // ============================================================
+
+    const emailInput =
+      document.getElementById(
+        "email"
+      );
+
+
+    const senhaInput =
+      document.getElementById(
+        "senha"
+      );
+
+
+    const loginBtn =
+      document.getElementById(
+        "loginBtn"
+      );
+
+
+    const logoutBtn =
+      document.getElementById(
+        "logoutBtn"
+      );
+
+
+    const seedBtn =
+      document.getElementById(
+        "seedBtn"
+      );
+
+
+    const userStatus =
+      document.getElementById(
+        "userStatus"
+      );
+
+
+    const log =
+      document.getElementById(
+        "log"
+      );
+
+
+    // ============================================================
+    // LOG
+    // ============================================================
+
+    const addLog = (
+      msg,
+      tipo = "ok"
+    ) => {
+
+      const span =
+        document.createElement(
+          "span"
+        );
+
+
+      span.className =
+        tipo;
+
+
+      span.textContent =
+        msg;
+
+
+      log.appendChild(
+        span
+      );
+
+
+      log.appendChild(
+        document.createElement(
+          "br"
+        )
+      );
+
+
+      log.scrollTop =
+        log.scrollHeight;
+    };
+
+
+    // ============================================================
+    // PRODUTOS
+    // ============================================================
+    //
+    // Estrutura utilizada pela nova landing page:
+    //
+    // id
+    // nome
+    // categoria
+    // marca
+    // preco
+    // preco10x
+    // offer
+    // descricao
+    // descricaoLonga
+    // imagem[]
+    // especificacoes[]
+    //
+    // ativo e destaque serão adicionados pelo seed.
+    // ============================================================
+
+    const produtos = [
+
+      {
+        id: 1,
+        nome: "Secador Super Turbo Plenitude",
+        categoria: "Secadores",
+        marca: "Plenitude",
+        preco: 2750.00,
+        preco10x: 3162.50,
+        offer: "off",
+
+        descricao: "Desenvolvido para proporcionar uma secagem rápida, eficiente e confortável em rotinas profissionais de banho e tosa.",
+
+        descricaoLonga: "Possui fluxo de ar potente, estrutura resistente e excelente durabilidade, reduzindo significativamente o tempo de secagem sem comprometer o conforto do animal.",
+
+        imagem: [
+          "./imgs/Products/Laminas/SecadorSuperTurboPlenitude1.png",
+          "./imgs/Products/Laminas/SecadorSuperTurboPlenitude2.png"
+        ],
+
+        especificacoes: [
+          "Fluxo de ar de alta potência",
+          "Ideal para uso profissional",
+          "Estrutura metálica resistente",
+          "Maior agilidade na secagem"
+        ]
+      },
+
+
+      {
+        id: 2,
+        nome: "Secador Turbo Plenitude",
+        categoria: "Secadores",
+        marca: "Plenitude",
+        preco: 2250.00,
+        preco10x: 2587.50,
+        offer: "off",
+
+        descricao: "Equipamento robusto desenvolvido para oferecer excelente desempenho durante a secagem de cães e gatos.",
+
+        descricaoLonga: "Projetado para atender profissionais de banho e tosa, proporciona fluxo de ar constante, alta durabilidade e ótimo rendimento em diferentes tipos de pelagem, contribuindo para uma rotina de trabalho mais produtiva.",
+
+        imagem: [
+          "./imgs/Products/Laminas/SecadorTurboPlenitude1.png",
+          "./imgs/Products/Laminas/SecadorTurboPlenitude2.png"
+        ],
+
+        especificacoes: [
+          "Motor de alto desempenho",
+          "Fluxo de ar uniforme",
+          "Uso profissional contínuo",
+          "Construção resistente"
+        ]
+      },
+
+
+      {
+        id: 3,
+        nome: "Soprador Super Turbo Plenitude",
+        categoria: "Sopradores",
+        marca: "Plenitude",
+        preco: 2260.00,
+        preco10x: 2599.00,
+        offer: "off",
+
+        descricao: "Proporciona grande volume de ar para remoção rápida da água após o banho.",
+
+        descricaoLonga: "Equipamento desenvolvido para profissionais de banho e tosa que buscam maior agilidade na remoção da água da pelagem.",
+
+        imagem: [
+          "./imgs/Products/Laminas/SopradorSuperTurboPedalPlenitude1.png",
+          "./imgs/Products/Laminas/SopradorSuperTurboPedalPlenitude2.png"
+        ],
+
+        especificacoes: [
+          "Acionamento por pedal",
+          "Fluxo de ar de alta potência",
+          "Uso profissional",
+          "Excelente produtividade"
+        ]
+      },
+
+
+      {
+        id: 4,
+        nome: "Soprador Super Turbo Plenitude",
+        categoria: "Sopradores",
+        marca: "Plenitude",
+        preco: 2260.00,
+        preco10x: 2599.00,
+        offer: "off",
+
+        descricao: "Ideal para acelerar a remoção da água da pelagem antes da secagem.",
+
+        descricaoLonga: "Equipamento desenvolvido para auxiliar na pré-secagem e agilizar a rotina de banho e tosa.",
+
+        imagem: [
+          "./imgs/Products/Laminas/SopradorSuperTurboPlenitude1.png",
+          "./imgs/Products/Laminas/SopradorSuperTurboPlenitude2.png"
+        ],
+
+        especificacoes: [
+          "Motor de alta potência",
+          "Fluxo de ar intenso",
+          "Estrutura reforçada",
+          "Uso profissional"
+        ]
+      },
+
+
+      {
+        id: 5,
+        nome: "Soprador 9.5 Plenitude",
+        categoria: "Sopradores",
+        marca: "Plenitude",
+        preco: 1499.00,
+        preco10x: 1723.85,
+        offer: "off",
+
+        descricao: "Desenvolvido para proporcionar excelente desempenho na remoção de água da pelagem.",
+
+        descricaoLonga: "Equipamento indicado para profissionais que buscam praticidade e eficiência durante a etapa de pré-secagem.",
+
+        imagem: [
+          "./imgs/Products/Laminas/Soprador9.5Plenitude1.png",
+          "./imgs/Products/Laminas/Soprador9.5Plenitude2.png"
+        ],
+
+        especificacoes: [
+          "Motor de alta eficiência",
+          "Baixo tempo de secagem",
+          "Ideal para uso intensivo",
+          "Construção robusta"
+        ]
+      },
+
+
+      {
+        id: 6,
+        nome: "Soprador 7.5 Plenitude",
+        categoria: "Sopradores",
+        marca: "Plenitude",
+        preco: 999.00,
+        preco10x: 1148.85,
+        offer: "off",
+
+        descricao: "Excelente opção para pet shops que buscam potência e confiabilidade.",
+
+        descricaoLonga: "Equipamento desenvolvido para auxiliar na remoção da água da pelagem e tornar a rotina de banho e tosa mais ágil.",
+
+        imagem: [
+          "./imgs/Products/Laminas/Soprador7.5Plenitude1.png",
+          "./imgs/Products/Laminas/Soprador7.5Plenitude2.png"
+        ],
+
+        especificacoes: [
+          "Fluxo de ar constante",
+          "Motor resistente",
+          "Uso profissional",
+          "Excelente custo-benefício"
+        ]
+      },
+
+
+      {
+        id: 7,
+        nome: "Soprador Turbo Plenitude",
+        categoria: "Sopradores",
+        marca: "Plenitude",
+        preco: 2260.00,
+        preco10x: 2599.00,
+        offer: "off",
+
+        descricao: "Projetado para proporcionar maior velocidade na etapa de pré-secagem.",
+
+        descricaoLonga: "Equipamento desenvolvido para proporcionar eficiência na remoção da água durante a rotina profissional de banho e tosa.",
+
+        imagem: [
+          "./imgs/Products/Laminas/SopradorSuperTurboPlenitude1.png",
+          "./imgs/Products/Laminas/SopradorSuperTurboPlenitude2.png"
+        ],
+
+        especificacoes: [
+          "Fluxo de ar potente",
+          "Uso contínuo profissional",
+          "Estrutura reforçada",
+          "Alta durabilidade"
+        ]
+      },
+
+
+      {
+        id: 8,
+        nome: "Mesa de Tosa Dobrável 90x60 Plenitude",
+        categoria: "Acessórios",
+        marca: "Plenitude",
+        preco: 1599.90,
+        offer: "off",
+
+        descricao: "Mesa profissional desenvolvida para proporcionar estabilidade, segurança e praticidade durante procedimentos de banho e tosa.",
+
+        descricaoLonga: "Sua estrutura reforçada oferece excelente resistência para o uso diário em pet shops. O sistema dobrável facilita o transporte e armazenamento.",
+
+        imagem: [
+          "./imgs/Products/Laminas/MesadeTosaDobrável90x60Plenitude1.png",
+          "./imgs/Products/Laminas/MesadeTosaDobrável90x60Plenitude2.png"
+        ],
+
+        especificacoes: [
+          "Tampo de 90 x 60 cm",
+          "Estrutura dobrável",
+          "Alta estabilidade",
+          "Uso profissional"
+        ]
+      },
+
+
+      {
+        id: 9,
+        nome: "Mesa 60cm Redonda Regulável Plenitude",
+        categoria: "Acessórios",
+        marca: "Plenitude",
+        preco: 1399.90,
+        offer: "off",
+
+        descricao: "Ideal para procedimentos rápidos de acabamento e tosa em animais de pequeno e médio porte.",
+
+        descricaoLonga: "Possui regulagem de altura que proporciona maior conforto ao profissional durante a rotina de trabalho.",
+
+        imagem: [
+          "./imgs/Products/Laminas/Mesa60cmRedondaRegulávelPlenitude1.png",
+          "./imgs/Products/Laminas/Mesa60cmRedondaRegulávelPlenitude2.png"
+        ],
+
+        especificacoes: [
+          "Diâmetro de 60 cm",
+          "Altura regulável",
+          "Estrutura reforçada",
+          "Ideal para acabamento"
+        ]
+      },
+
+
+      {
+        id: 10,
+        nome: "Mesa 65cm Redonda Pneumática Plenitude",
+        categoria: "Acessórios",
+        marca: "Plenitude",
+        preco: 2499.90,
+        offer: "off",
+
+        descricao: "Mesa profissional equipada com regulagem pneumática para maior conforto durante o trabalho.",
+
+        descricaoLonga: "O sistema pneumático permite ajustes rápidos de altura, proporcionando maior praticidade durante a rotina de banho e tosa.",
+
+        imagem: [
+          "./imgs/Products/Laminas/Mesa60cmRedondaRegulávelPlenitude1.png",
+          "./imgs/Products/Laminas/Mesa60cmRedondaRegulávelPlenitude2.png"
+        ],
+
+        especificacoes: [
+          "Sistema pneumático",
+          "Diâmetro de 65 cm",
+          "Regulagem de altura",
+          "Uso profissional"
+        ]
+      },
+
+
+      {
+        id: 11,
+        nome: "Mesa 110x60 Regulagem de Altura Plenitude",
+        categoria: "Acessórios",
+        marca: "Plenitude",
+        preco: 1100.00,
+        preco10x: 1265.00,
+        offer: "off",
+
+        descricao: "Projetada para oferecer ergonomia, estabilidade e praticidade durante a rotina profissional.",
+
+        descricaoLonga: "Mesa com área de trabalho de 110 x 60 cm, desenvolvida para atender às necessidades da rotina profissional de banho e tosa.",
+
+        imagem: [
+          "./imgs/Products/Laminas/Mesa110x60RegulagemdeAlturaPlenitude1.png",
+          "./imgs/Products/Laminas/Mesa110x60RegulagemdeAlturaPlenitude2.png"
+        ],
+
+        especificacoes: [
+          "Tampo de 110 x 60 cm",
+          "Altura ajustável",
+          "Estrutura metálica",
+          "Uso profissional"
+        ]
+      },
+
+
+      {
+        id: 12,
+        nome: "Mesa 110x60 Elétrica Plenitude",
+        categoria: "Acessórios",
+        marca: "Plenitude",
+        preco: 4599.90,
+        offer: "off",
+
+        descricao: "Mesa elétrica desenvolvida para proporcionar maior ergonomia durante procedimentos de banho e tosa.",
+
+        descricaoLonga: "Seu sistema elétrico permite ajustar a altura com facilidade, proporcionando maior conforto ao profissional durante os atendimentos.",
+
+        imagem: [
+          "./imgs/Products/Laminas/Mesa110x60ElétricaPlenitude1.png",
+          "./imgs/Products/Laminas/Mesa110x60ElétricaPlenitude2.png"
+        ],
+
+        especificacoes: [
+          "Elevação elétrica",
+          "Tampo 110 x 60 cm",
+          "Estrutura reforçada",
+          "Uso profissional intensivo"
+        ]
+      },
+
+
+      {
+        id: 13,
+        nome: "Guia de Contenção P Plenitude",
+        categoria: "Acessórios",
+        marca: "Plenitude",
+        preco: 49.90,
+        offer: "off",
+
+        descricao: "Auxilia na contenção segura durante procedimentos de banho e tosa.",
+
+        descricaoLonga: "Possui ajuste simples e material resistente para auxiliar durante os procedimentos profissionais.",
+
+        imagem: [
+          "./imgs/Products/Laminas/GuiadeContençãoPPlenitude1.png",
+          "./imgs/Products/Laminas/GuiadeContençãoPPlenitude2.png"
+        ],
+
+        especificacoes: [
+          "Tamanho P",
+          "Regulagem rápida",
+          "Material resistente",
+          "Uso profissional"
+        ]
+      },
+
+
+      {
+        id: 14,
+        nome: "Guia de Contenção M Plenitude",
+        categoria: "Acessórios",
+        marca: "Plenitude",
+        preco: 54.90,
+        offer: "off",
+
+        descricao: "Indicada para auxiliar na contenção durante procedimentos em animais de médio porte.",
+
+        descricaoLonga: "Produzida com material resistente e ajuste prático para utilização durante a rotina profissional.",
+
+        imagem: [
+          "./imgs/Products/Laminas/GuiadeContençãoPPlenitude1.png",
+          "./imgs/Products/Laminas/GuiadeContençãoPPlenitude2.png"
+        ],
+
+        especificacoes: [
+          "Tamanho M",
+          "Alta resistência",
+          "Regulagem prática",
+          "Uso profissional"
+        ]
+      },
+
+
+      {
+        id: 15,
+        nome: "Guia de Contenção G Plenitude",
+        categoria: "Acessórios",
+        marca: "Plenitude",
+        preco: 59.90,
+        offer: "off",
+
+        descricao: "Projetada para auxiliar na contenção durante procedimentos em animais de grande porte.",
+
+        descricaoLonga: "Seu sistema de ajuste permite adaptar o equipamento para diferentes portes de animais durante os procedimentos.",
+
+        imagem: [
+          "./imgs/Products/Laminas/GuiadeContençãoPPlenitude2.png",
+          "./imgs/Products/Laminas/GuiadeContençãoPPlenitude1.png"
+        ],
+
+        especificacoes: [
+          "Tamanho G",
+          "Material reforçado",
+          "Fácil regulagem",
+          "Uso profissional"
+        ]
+      },
+
+
+      {
+        id: 16,
+        nome: "Suporte Soprador Plenitude Azul",
+        categoria: "Acessórios",
+        marca: "Plenitude",
+        preco: 289.90,
+        offer: "off",
+
+        descricao: "Acessório desenvolvido para posicionar o soprador de forma prática durante o atendimento.",
+
+        descricaoLonga: "Permite posicionar o soprador de maneira prática durante a rotina de banho e tosa.",
+
+        imagem: [
+          "./imgs/Products/Laminas/SuporteSopradorPlenitudeAzul1.png",
+          "./imgs/Products/Laminas/SuporteSopradorPlenitudeAzul2.png"
+        ],
+
+        especificacoes: [
+          "Estrutura metálica",
+          "Alta resistência",
+          "Fácil instalação",
+          "Uso profissional"
+        ]
+      },
+
+
+      {
+        id: 17,
+        nome: "Suporte Secador Plenitude",
+        categoria: "Acessórios",
+        marca: "Plenitude",
+        preco: 259.90,
+        offer: "off",
+
+        descricao: "Mantém o secador posicionado de forma prática e segura durante a secagem.",
+
+        descricaoLonga: "Acessório desenvolvido para facilitar o posicionamento do secador durante a rotina profissional.",
+
+        imagem: [
+          "./imgs/Products/Laminas/SuporteSecadorPlenitude1.png",
+          "./imgs/Products/Laminas/SuporteSecadorPlenitude2.png"
+        ],
+
+        especificacoes: [
+          "Estrutura reforçada",
+          "Compatível com secadores profissionais",
+          "Fácil instalação",
+          "Ideal para uso contínuo"
+        ]
+      },
+
+
+      {
+        id: 18,
+        nome: "Caixa Acústica Plenitude",
+        categoria: "Acessórios",
+        marca: "Plenitude",
+        preco: 599.00,
+        preco10x: 688.85,
+        offer: "off",
+
+        descricao: "Caixa acústica desenvolvida para auxiliar no controle acústico do ambiente profissional.",
+
+        descricaoLonga: "Produto destinado a ambientes profissionais de banho e tosa, contribuindo para uma melhor organização acústica do espaço.",
+
+        imagem: [
+          "./imgs/Products/Laminas/CaixaAcustica1.png",
+          "./imgs/Products/Laminas/CaixaAcustica2.png"
+        ],
+
+        especificacoes: [
+          "Uso profissional",
+          "Estrutura resistente",
+          "Ideal para ambientes de banho e tosa"
+        ]
+      },
+
+
+      {
+        id: 19,
+        nome: "Canil 3 Módulos Minag Azul com Portas de Vidro",
+        categoria: "Acessórios",
+        marca: "Minag",
+        preco: 3470.00,
+        preco10x: 3990.50,
+        offer: "off",
+
+        descricao: "Canil com três módulos e portas de vidro, desenvolvido para acomodação organizada dos animais em ambientes profissionais.",
+
+        descricaoLonga: "Estrutura indicada para pet shops e estabelecimentos que precisam de um espaço organizado para acomodação dos animais durante a rotina de atendimento.",
+
+        imagem: [
+          "./imgs/Products/Laminas/Canil3MódulosPlenitudeAzul1.png",
+          "./imgs/Products/Laminas/Canil3MódulosPlenitudeAzul2.png"
+        ],
+
+        especificacoes: [
+          "3 módulos",
+          "Portas de vidro",
+          "Cor azul",
+          "Uso profissional"
+        ]
+      },
+
+
+      {
+        id: 20,
+        nome: "Canil Rotomoldado Essencial Pro - 6 Lugares",
+        categoria: "Acessórios",
+        marca: "Plenitude",
+        preco: 8117.00,
+        preco10x: 9334.55,
+        offer: "off",
+
+        descricao: "Canil rotomoldado com seis lugares, desenvolvido para acomodação de animais em ambientes profissionais.",
+
+        descricaoLonga: "Solução para pet shops e centros de estética animal que necessitam de maior capacidade de acomodação e organização durante a rotina de atendimento.",
+
+        imagem: [
+          "./imgs/Products/Laminas/CanilRotomoldadoEssencialPro1.png",
+          "./imgs/Products/Laminas/CanilRotomoldadoEssencialPro2.png"
+        ],
+
+        especificacoes: [
+          "6 lugares",
+          "Modelo rotomoldado",
+          "Linha Essencial Pro",
+          "Uso profissional"
+        ]
+      },
+
+
+      {
+        id: 21,
+        nome: "Máquina de Secar Topline - 2 Lugares",
+        categoria: "Secadores",
+        marca: "Plenitude",
+        preco: 10791.00,
+        preco10x: 12409.65,
+        offer: "off",
+
+        descricao: "Máquina de secar profissional com duas portas, desenvolvida para atender à rotina de pet shops e centros de estética animal.",
+
+        descricaoLonga: "Equipamento destinado à secagem profissional de animais, oferecendo uma solução prática para estabelecimentos que buscam mais eficiência e estrutura para os processos de banho e tosa.",
+
+        imagem: [
+          "./imgs/Products/Laminas/SecadoraPlenitude2Portas1.png",
+          "./imgs/Products/Laminas/SecadoraPlenitude2Portas2.png"
+        ],
+
+        especificacoes: [
+          "Modelo com 2 portas",
+          "Cor preta",
+          "Uso profissional",
+          "Ideal para pet shops e centros de estética animal"
+        ]
+      }
+
+    ];
+
+
+    // ============================================================
+    // CATEGORIAS
+    // ============================================================
+
+    const categorias = [
+
+      {
+        id: "all",
+        nome: "Todos",
+        icone: "fa-border-all"
+      },
+
+      {
+        id: "Secadores",
+        nome: "Secadores",
+        icone: "fa-wind"
+      },
+
+      {
+        id: "Sopradores",
+        nome: "Sopradores",
+        icone: "fa-wind"
+      },
+
+      {
+        id: "Lâminas",
+        nome: "Lâminas",
+        icone: "fa-scissors"
+      },
+
+      {
+        id: "Tesouras",
+        nome: "Tesouras",
+        icone: "fa-scissors"
+      },
+
+      {
+        id: "Máquinas",
+        nome: "Máquinas",
+        icone: "fa-gears"
+      },
+
+      {
+        id: "Acessórios",
+        nome: "Acessórios",
+        icone: "fa-toolbox"
+      }
+
+    ];
+
+
+    // ============================================================
+    // CUPONS
+    // ============================================================
+
+    const cupons = [
+
+      {
+        docId:
+          "DESCONTO10",
+
+        codigo:
+          "DESCONTO10",
+
+        tipo:
+          "percentual",
+
+        valor:
+          10,
+
+        valorMinimo:
+          0,
+
+        validade:
+          null,
+
+        ativo:
+          true
+
+      }
+
+    ];
+
+
+    // ============================================================
+    // LOGIN
+    // ============================================================
+
+    loginBtn.addEventListener(
+      "click",
+      async () => {
+
+        const email =
+          emailInput.value.trim();
+
+
+        const senha =
+          senhaInput.value;
+
+
+        if (!email || !senha) {
+
+          addLog(
+            "✘ Informe o e-mail e a senha.",
+            "err"
+          );
+
+          return;
+        }
+
+
+        loginBtn.disabled = true;
+
+
+        addLog(
+          "▶ Autenticando...",
+          "info"
+        );
+
+
+        try {
+
+          const credential =
+            await auth.signInWithEmailAndPassword(
+              email,
+              senha
+            );
+
+
+          addLog(
+            `✔ Login realizado: ${credential.user.email}`,
+            "ok"
+          );
+
+
+          userStatus.style.display =
+            "block";
+
+
+          userStatus.textContent =
+            `✔ Autenticado como: ${credential.user.email}`;
+
+
+          seedBtn.disabled =
+            false;
+
+
+          loginBtn.style.display =
+            "none";
+
+
+          logoutBtn.style.display =
+            "block";
+
+
+          emailInput.disabled =
+            true;
+
+
+          senhaInput.disabled =
+            true;
+
+
+        } catch (e) {
+
+          console.error(
+            "Erro de autenticação:",
+            e
+          );
+
+
+          addLog(
+            `✘ Erro no login: ${e.message}`,
+            "err"
+          );
+
+
+          seedBtn.disabled =
+            true;
+
+        } finally {
+
+          loginBtn.disabled =
+            false;
+        }
+
+      }
+    );
+
+
+    // ============================================================
+    // LOGOUT
+    // ============================================================
+
+    logoutBtn.addEventListener(
+      "click",
+      async () => {
+
+        try {
+
+          await auth.signOut();
+
+
+          userStatus.style.display =
+            "none";
+
+
+          seedBtn.disabled =
+            true;
+
+
+          loginBtn.style.display =
+            "block";
+
+
+          logoutBtn.style.display =
+            "none";
+
+
+          emailInput.disabled =
+            false;
+
+
+          senhaInput.disabled =
+            false;
+
+
+          senhaInput.value =
+            "";
+
+
+          addLog(
+            "✔ Usuário desconectado.",
+            "info"
+          );
+
+
+        } catch (e) {
+
+          addLog(
+            `✘ Erro ao sair: ${e.message}`,
+            "err"
+          );
+        }
+
+      }
+    );
+
+
+    // ============================================================
+    // OBSERVAR ESTADO DE AUTENTICAÇÃO
+    // ============================================================
+
+    auth.onAuthStateChanged(
+      (user) => {
+
+        if (user) {
+
+          userStatus.style.display =
+            "block";
+
+
+          userStatus.textContent =
+            `✔ Autenticado como: ${user.email}`;
+
+
+          seedBtn.disabled =
+            false;
+
+
+          loginBtn.style.display =
+            "none";
+
+
+          logoutBtn.style.display =
+            "block";
+
+
+          emailInput.disabled =
+            true;
+
+
+          senhaInput.disabled =
+            true;
+
+
+        } else {
+
+          userStatus.style.display =
+            "none";
+
+
+          seedBtn.disabled =
+            true;
+
+
+          loginBtn.style.display =
+            "block";
+
+
+          logoutBtn.style.display =
+            "none";
+
+
+          emailInput.disabled =
+            false;
+
+
+          senhaInput.disabled =
+            false;
+        }
+
+      }
+    );
+
+
+    // ============================================================
+    // SEED FIREBASE
+    // ============================================================
+
+    seedBtn.addEventListener(
+      "click",
+      async () => {
+
+        // ----------------------------------------------------
+        // GARANTIR AUTENTICAÇÃO
+        // ----------------------------------------------------
+
+        const user =
+          auth.currentUser;
+
+
+        if (!user) {
+
+          addLog(
+            "✘ Você precisa estar autenticado.",
+            "err"
+          );
+
+          return;
+        }
+
+
+        // ----------------------------------------------------
+        // BLOQUEAR BOTÃO
+        // ----------------------------------------------------
+
+        seedBtn.disabled =
+          true;
+
+
+        log.innerHTML = "";
+
+
+        addLog(
+          "▶ Usuário autenticado.",
+          "ok"
+        );
+
+
+        addLog(
+          `▶ Conta: ${user.email}`,
+          "info"
+        );
+
+
+        addLog(
+          "▶ Iniciando envio...",
+          "info"
+        );
+
+
+        let produtosOk =
+          0;
+
+        let categoriasOk =
+          0;
+
+        let cuponsOk =
+          0;
+
+        let erros =
+          0;
+
+
+        // ====================================================
+        // PRODUTOS
+        // ====================================================
+
+        addLog(
+          "",
+          "info"
+        );
+
+
+        addLog(
+          `▶ Enviando ${produtos.length} produtos...`,
+          "info"
+        );
+
+
+        for (
+          const p of produtos
+        ) {
+
+          try {
+
+            await db
+              .collection(
+                "produtos"
+              )
+              .doc(
+                String(p.id)
+              )
+              .set({
+
+                ...p,
+
+                ativo:
+                  true,
+
+                destaque:
+                  false,
+
+                criadoEm:
+                  firebase
+                    .firestore
+                    .FieldValue
+                    .serverTimestamp()
+
+              });
+
+
+            addLog(
+              `✔ [${p.id}] ${p.nome}`,
+              "ok"
+            );
+
+
+            produtosOk++;
+
+
+          } catch (e) {
+
+            console.error(
+              `Erro no produto ${p.id}:`,
+              e
+            );
+
+
+            addLog(
+              `✘ [${p.id}] ${p.nome} — ${e.message}`,
+              "err"
+            );
+
+
+            erros++;
+          }
+        }
+
+
+        // ====================================================
+        // CATEGORIAS
+        // ====================================================
+
+        addLog(
+          "",
+          "info"
+        );
+
+
+        addLog(
+          "▶ Enviando categorias...",
+          "info"
+        );
+
+
+        for (
+          const c of categorias
+        ) {
+
+          try {
+
+            await db
+              .collection(
+                "categorias"
+              )
+              .doc(
+                c.id
+              )
+              .set(c);
+
+
+            addLog(
+              `✔ Categoria: ${c.nome}`,
+              "ok"
+            );
+
+
+            categoriasOk++;
+
+
+          } catch (e) {
+
+            console.error(
+              `Erro na categoria ${c.nome}:`,
+              e
+            );
+
+
+            addLog(
+              `✘ Categoria: ${c.nome} — ${e.message}`,
+              "err"
+            );
+
+
+            erros++;
+          }
+        }
+
+
+        // ====================================================
+        // CUPONS
+        // ====================================================
+
+        addLog(
+          "",
+          "info"
+        );
+
+
+        addLog(
+          "▶ Enviando cupons...",
+          "info"
+        );
+
+
+        for (
+          const c of cupons
+        ) {
+
+          try {
+
+            const {
+              docId,
+              ...dados
+            } = c;
+
+
+            await db
+              .collection(
+                "cupons"
+              )
+              .doc(
+                docId
+              )
+              .set(dados);
+
+
+            addLog(
+              `✔ Cupom: ${c.codigo}`,
+              "ok"
+            );
+
+
+            cuponsOk++;
+
+
+          } catch (e) {
+
+            console.error(
+              `Erro no cupom ${c.codigo}:`,
+              e
+            );
+
+
+            addLog(
+              `✘ Cupom: ${c.codigo} — ${e.message}`,
+              "err"
+            );
+
+
+            erros++;
+          }
+        }
+
+
+        // ====================================================
+        // RESULTADO
+        // ====================================================
+
+        addLog(
+          "",
+          "info"
+        );
+
+
+        addLog(
+          "━━━━━━━━━━━━━━━━━━━━━━━━━━━━",
+          "info"
+        );
+
+
+        addLog(
+          `✔ Produtos: ${produtosOk}/${produtos.length}`,
+          produtosOk === produtos.length
+            ? "ok"
+            : "warning"
+        );
+
+
+        addLog(
+          `✔ Categorias: ${categoriasOk}/${categorias.length}`,
+          categoriasOk === categorias.length
+            ? "ok"
+            : "warning"
+        );
+
+
+        addLog(
+          `✔ Cupons: ${cuponsOk}/${cupons.length}`,
+          cuponsOk === cupons.length
+            ? "ok"
+            : "warning"
+        );
+
+
+        addLog(
+          `✘ Erros: ${erros}`,
+          erros > 0
+            ? "err"
+            : "ok"
+        );
+
+
+        if (
+          erros === 0
+        ) {
+
+          addLog(
+            "🎉 SEED CONCLUÍDO COM SUCESSO!",
+            "ok"
+          );
+
+        } else {
+
+          addLog(
+            "⚠ O SEED TERMINOU COM ERROS.",
+            "err"
+          );
+        }
+
+
+        addLog(
+          "━━━━━━━━━━━━━━━━━━━━━━━━━━━━",
+          "info"
+        );
+
+
+        // Permitir executar novamente.
+        seedBtn.disabled =
+          false;
+
+      }
+    );
+
+  </script>
+
+</body>
+
+</html>
