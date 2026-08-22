@@ -2311,4 +2311,42 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     }
 
+    // FAQ - Abrir e fechar perguntas
+    document.querySelectorAll('.FaqQuestion').forEach(question => {
+        question.addEventListener('click', () => {
+            const faqItem = question.closest('.FaqItem');
+            const answer = faqItem.querySelector('.FaqAnswer');
+            const icon = question.querySelector('.FaqIcon');
+
+            // Fecha as outras perguntas
+            document.querySelectorAll('.FaqItem').forEach(item => {
+                if (item !== faqItem) {
+                    item.classList.remove('active');
+
+                    const otherAnswer = item.querySelector('.FaqAnswer');
+                    const otherIcon = item.querySelector('.FaqIcon');
+
+                    if (otherAnswer) {
+                        otherAnswer.style.maxHeight = null;
+                    }
+
+                    if (otherIcon) {
+                        otherIcon.textContent = '+';
+                    }
+                }
+            });
+
+            // Abre/fecha a pergunta clicada
+            if (faqItem.classList.contains('active')) {
+                faqItem.classList.remove('active');
+                answer.style.maxHeight = null;
+                icon.textContent = '+';
+            } else {
+                faqItem.classList.add('active');
+                answer.style.maxHeight = answer.scrollHeight + 'px';
+                icon.textContent = '−';
+            }
+        });
+    });
+
 });

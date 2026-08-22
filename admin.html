@@ -6,6 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Admin – Cutelaria Pets</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="icon" href="./img/DevIcon.png" type="image/png">
   <style>
     :root {
       --bg: #0d0d0d;
@@ -168,7 +169,7 @@
     }
 
     .side-btn.active {
-      background: #2a2205;
+      background: #052a09;
       color: var(--gold);
       font-weight: 600
     }
@@ -880,10 +881,23 @@
 
         <div class="form-group full">
           <label>Imagens</label>
+
+          <input type="file" id="form-arquivos" accept="image/jpeg,image/png,image/webp,image/gif" multiple>
+
+          <span class="hint">
+            Selecione uma ou várias imagens do computador. Elas serão enviadas para a pasta de imagens do site.
+          </span>
+
           <textarea id="form-imagem"
-            placeholder="Uma URL/caminho por linha&#10;./imgs/Products/Laminas/produto1.png&#10;./imgs/Products/Laminas/produto2.png"></textarea>
-          <span class="hint">A primeira imagem será usada como imagem principal do card. As demais ficam disponíveis na
-            galeria do modal.</span>
+            placeholder="Uma URL/caminho por linha&#10;./imgs/Products/produto1.png&#10;./imgs/Products/produto2.png"></textarea>
+
+          <span class="hint">
+            Você também pode adicionar manualmente uma URL ou caminho de imagem.
+            A primeira imagem será usada como imagem principal do card.
+          </span>
+
+          <div id="image-upload-status" class="hint" style="margin-top:8px"></div>
+
           <div id="image-preview-list" class="image-list"></div>
         </div>
 
@@ -972,7 +986,7 @@
   <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
-  
+
   <script>
     const firebaseConfig = {
       apiKey: "AIzaSyBJjLLf0XxnyT0lwE9WwYepaXGnnWprUpc",
@@ -997,6 +1011,173 @@
     };
 
     let todosProdutos = [], todasCategorias = [], todosCupons = [], vendasRelatorio = [];
+    let imagensEmUpload = 0;
+
+    async function enviarImagem(arquivo) {
+
+      const user = auth.currentUser;
+
+      if (!user) {
+        throw new Error("Usuário não autenticado.");
+      }
+
+      const token = await user.getIdToken();
+
+      const formData = new FormData();
+      formData.append("imagem", arquivo);
+
+      const response = await fetch("./upload.php", {
+        method: "POST",
+        headers: {
+          "Authorization": "Bearer " + token
+        },
+        body: formData
+      });
+
+      let resultado;
+
+      try {
+        resultado = await response.json();
+      } catch (e) {
+        throw new Error("Resposta inválida do servidor.");
+      }
+
+      if (!response.ok || !resultado.success) {
+        throw new Error(resultado.error || "Erro ao enviar imagem.");
+      }
+
+      return resultado.url;
+    }
+
+    document.getElementById("form-arquivos").addEventListener("change", async function () {
+
+      const arquivos = Array.from(this.files);
+
+      if (!arquivos.length) return;
+
+      const status = document.getElementById("image-upload-status");
+
+      status.textContent = "Enviando imagens...";
+
+      imagensEmUpload = arquivos.length;
+
+      try {
+
+        const urls = [];
+
+        for (const arquivo of arquivos) {
+
+          const url = await enviarImagem(arquivo);
+
+          urls.push(url);
+        }
+
+        const textarea = document.getElementById("form-imagem");
+
+        const imagensAtuais = textarea.value
+          .split(/\r?\n/)
+          .map(x => x.trim())
+          .filter(Boolean);
+
+        const todasImagens = [
+          ...imagensAtuais,
+          ...urls
+        ];
+
+        textarea.value = todasImagens.join("\n");
+
+        renderImagePreview(todasImagens);
+
+        status.textContent =
+          urls.length === 1
+            ? "Imagem enviada com sucesso!"
+            : `${urls.length} imagens enviadas com sucesso!`;
+
+      } catch (e) {
+
+        console.error(e);
+
+        status.textContent = "";
+
+        toast(
+          "Erro ao enviar imagem: " + e.message,
+          "err"
+        );
+
+      } finally {
+
+        imagensEmUpload = 0;
+
+        // Permite selecionar novamente o mesmo arquivo
+        this.value = "";
+      }
+
+    });
+
+    document.getElementById("form-arquivos").addEventListener("change", async function () {
+
+      const arquivos = Array.from(this.files);
+
+      if (!arquivos.length) return;
+
+      const status = document.getElementById("image-upload-status");
+
+      status.textContent = "Enviando imagens...";
+
+      imagensEmUpload = arquivos.length;
+
+      try {
+
+        const urls = [];
+
+        for (const arquivo of arquivos) {
+
+          const url = await enviarImagem(arquivo);
+
+          urls.push(url);
+        }
+
+        const textarea = document.getElementById("form-imagem");
+
+        const imagensAtuais = textarea.value
+          .split(/\r?\n/)
+          .map(x => x.trim())
+          .filter(Boolean);
+
+        const todasImagens = [
+          ...imagensAtuais,
+          ...urls
+        ];
+
+        textarea.value = todasImagens.join("\n");
+
+        renderImagePreview(todasImagens);
+
+        status.textContent =
+          urls.length === 1
+            ? "Imagem enviada com sucesso!"
+            : `${urls.length} imagens enviadas com sucesso!`;
+
+      } catch (e) {
+
+        console.error(e);
+
+        status.textContent = "";
+
+        toast(
+          "Erro ao enviar imagem: " + e.message,
+          "err"
+        );
+
+      } finally {
+
+        imagensEmUpload = 0;
+
+        // Permite selecionar novamente o mesmo arquivo
+        this.value = "";
+      }
+
+    });
 
     function fazerLogin() {
       const email = document.getElementById("email-input").value.trim();
@@ -1114,6 +1295,8 @@
       document.getElementById("form-offer").checked = false;
       document.getElementById("form-ativo").checked = true;
       document.getElementById("form-destaque").checked = false;
+      document.getElementById("form-arquivos").value = "";
+      document.getElementById("image-upload-status").textContent = "";
       renderImagePreview([]);
       abrirModal("modal-produto");
     }
@@ -1129,6 +1312,8 @@
       document.getElementById("form-preco").value = p.preco ?? "";
       document.getElementById("form-preco10x").value = p.preco10x ?? "";
       document.getElementById("form-imagem").value = imgs.join("\n");
+      document.getElementById("form-arquivos").value = "";
+      document.getElementById("image-upload-status").textContent = "";
       document.getElementById("form-descricao").value = p.descricao || "";
       document.getElementById("form-descricaoLonga").value = p.descricaoLonga || "";
       document.getElementById("form-especificacoes").value = Array.isArray(p.especificacoes) ? p.especificacoes.join("\n") : (p.especificacoes || "");
