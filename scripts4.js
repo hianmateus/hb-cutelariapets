@@ -16,6 +16,49 @@ firebase.initializeApp(firebaseConfig);
 const db = firebase.firestore();
 
 
+function ShowProjects(params) {
+    const section = document.querySelector('.services-section');
+    if (section) {
+        section.scrollIntoView({ behavior: 'smooth' }); // rolagem suave
+    }
+}
+
+function ShowAbout(params) {
+    const section = document.querySelector('.SectionAbout');
+    if (section) {
+        section.scrollIntoView({ behavior: 'smooth' }); // rolagem suave
+    }
+}
+
+function ShowProdutcs(params) {
+    const section = document.querySelector('.products');
+    if (section) {
+        section.scrollIntoView({ behavior: 'smooth' }); // rolagem suave
+    }
+}
+
+function ShowProcess(params) {
+    const section = document.querySelector('.processo');
+    if (section) {
+        section.scrollIntoView({ behavior: 'smooth' }); // rolagem suave
+    }
+}
+
+function ShowLocal(params) {
+    const section = document.querySelector('.SectionCall');
+    if (section) {
+        section.scrollIntoView({ behavior: 'smooth' }); // rolagem suave
+    }
+}
+
+function ShowFaq(params) {
+    const section = document.querySelector('.FaqSection');
+    if (section) {
+        section.scrollIntoView({ behavior: 'smooth' }); // rolagem suave
+    }
+}
+
+
 // ============================================================
 // CONFIGURAÇÕES FIXAS DA LANDING PAGE
 // ============================================================
@@ -24,13 +67,74 @@ const db = firebase.firestore();
 // CONFIGURAÇÕES DA LANDING PAGE
 // ============================================================
 
-let NUMERO_WHATSAPP = "";
+let NUMERO_WHATSAPP = "558396166367";
+
 let CONFIG_RETIRADA = {
-    dias: [],
+    dias: [0, 1, 2, 3, 4, 5, 6],
     horaInicio: "08:00",
     horaFim: "18:00",
     intervalo: 60
 };
+
+async function carregarConfiguracoesLoja() {
+    try {
+        const doc = await db
+            .collection("configuracoes")
+            .doc("geral")
+            .get();
+
+        if (doc.exists) {
+            const config = doc.data();
+
+            if (config.whatsapp) {
+                NUMERO_WHATSAPP = String(config.whatsapp)
+                    .replace(/\D/g, "");
+            }
+
+            CONFIG_RETIRADA = {
+                dias: Array.isArray(config.retiradaDias)
+                    ? config.retiradaDias
+                    : [0, 1, 2, 3, 4, 5, 6],
+
+                horaInicio:
+                    config.retiradaHoraInicio || "08:00",
+
+                horaFim:
+                    config.retiradaHoraFim || "18:00",
+
+                intervalo:
+                    Number(config.retiradaIntervalo) || 60
+            };
+        }
+
+        configurarBotoesWhatsApp();
+
+    } catch (e) {
+        console.error(
+            "Erro ao carregar configurações da loja:",
+            e
+        );
+
+        configurarBotoesWhatsApp();
+    }
+}
+
+function configurarBotoesWhatsApp() {
+
+    const urlWhatsApp =
+        `https://wa.me/${NUMERO_WHATSAPP}`;
+
+    const botoes = [
+        document.getElementById("btn-whatsapp-orcamento"),
+        document.getElementById("btn-whatsapp-orcamento-final")
+    ];
+
+    botoes.forEach(botao => {
+        if (botao) {
+            botao.href = urlWhatsApp;
+        }
+    });
+}
 
 
 // ============================================================
@@ -252,6 +356,29 @@ document.addEventListener("DOMContentLoaded", async () => {
 
             pickupDateInput.min =
                 hoje.toISOString().split("T")[0];
+
+            pickupDateInput.addEventListener("change", () => {
+
+                if (!pickupDateInput.value) return;
+
+                const [ano, mes, dia] =
+                    pickupDateInput.value.split("-").map(Number);
+
+                const dataSelecionada =
+                    new Date(ano, mes - 1, dia);
+
+                const diaSemana =
+                    dataSelecionada.getDay();
+
+                if (!CONFIG_RETIRADA.dias.includes(diaSemana)) {
+
+                    pickupDateInput.value = "";
+
+                    alert(
+                        "A loja não realiza retiradas neste dia. Escolha outra data."
+                    );
+                }
+            });
         }
 
 
@@ -365,6 +492,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
 
 
+    await carregarConfiguracoesLoja();
     configurarRetirada();
 
 
@@ -1589,17 +1717,16 @@ document.addEventListener("DOMContentLoaded", async () => {
     // FINALIZAR PEDIDO
     // ========================================================
 
-    const finalizarPedido = () => {
+    const finalizarPedido = async () => {
 
         let valid = true;
-
         let fieldsToValidate = [];
 
+        // ========================================================
+        // VALIDAÇÃO DOS CAMPOS
+        // ========================================================
 
-        if (
-            tipoEntrega ===
-            "delivery"
-        ) {
+        if (tipoEntrega === "delivery") {
 
             fieldsToValidate = [
                 "delivery-name",
@@ -1607,9 +1734,8 @@ document.addEventListener("DOMContentLoaded", async () => {
                 "delivery-cep",
                 "delivery-address"
             ];
-        }
 
-        else {
+        } else {
 
             fieldsToValidate = [
                 "pickup-name",
@@ -1619,34 +1745,21 @@ document.addEventListener("DOMContentLoaded", async () => {
         }
 
 
-        // ----------------------------------------------------
-        // VALIDAR DIA DE RETIRADA
-        // ----------------------------------------------------
+        // ========================================================
+        // VALIDAR DIA DA RETIRADA
+        // ========================================================
 
-        if (
-            tipoEntrega ===
-            "pickup"
-        ) {
+        if (tipoEntrega === "pickup") {
 
             const dataInput =
-                document.getElementById(
-                    "pickup-date"
-                );
+                document.getElementById("pickup-date");
 
+            if (dataInput.value) {
 
-            if (
-                dataInput.value
-            ) {
-
-                const [
-                    ano,
-                    mes,
-                    dia
-                ] =
+                const [ano, mes, dia] =
                     dataInput.value
                         .split("-")
                         .map(Number);
-
 
                 const diaSemana =
                     new Date(
@@ -1655,16 +1768,9 @@ document.addEventListener("DOMContentLoaded", async () => {
                         dia
                     ).getDay();
 
+                if (!CONFIG_RETIRADA.dias.includes(diaSemana)) {
 
-                if (
-                    !CONFIG_RETIRADA.dias.includes(
-                        diaSemana
-                    )
-                ) {
-
-                    dataInput.classList.add(
-                        "error"
-                    );
+                    dataInput.classList.add("error");
 
                     alert(
                         "A loja não realiza retiradas no dia selecionado. Escolha outra data."
@@ -1676,62 +1782,51 @@ document.addEventListener("DOMContentLoaded", async () => {
         }
 
 
-        // ----------------------------------------------------
+        // ========================================================
         // VALIDAR CAMPOS
-        // ----------------------------------------------------
+        // ========================================================
 
-        fieldsToValidate.forEach(
-            id => {
+        fieldsToValidate.forEach((id) => {
 
-                const el =
-                    document.getElementById(
-                        id
-                    );
+            const el =
+                document.getElementById(id);
+
+            let isFieldValid =
+                el.value.trim() !== "";
 
 
-                let isFieldValid =
-                    el.value.trim() !== "";
+            // Nome precisa ter pelo menos nome + sobrenome
 
+            if (
+                id.includes("name") &&
+                isFieldValid
+            ) {
 
                 if (
-                    id.includes("name") &&
-                    isFieldValid
+                    el.value
+                        .trim()
+                        .split(" ")
+                        .filter((word) => word)
+                        .length < 2
                 ) {
 
-                    if (
-                        el.value
-                            .trim()
-                            .split(" ")
-                            .filter(
-                                word =>
-                                    word
-                            )
-                            .length < 2
-                    ) {
-
-                        isFieldValid =
-                            false;
-                    }
-                }
-
-
-                if (!isFieldValid) {
-
-                    el.classList.add(
-                        "error"
-                    );
-
-                    valid = false;
-                }
-
-                else {
-
-                    el.classList.remove(
-                        "error"
-                    );
+                    isFieldValid = false;
                 }
             }
-        );
+
+
+            if (!isFieldValid) {
+
+                el.classList.add("error");
+
+                valid = false;
+
+            } else {
+
+                el.classList.remove("error");
+            }
+
+        });
 
 
         if (!valid) {
@@ -1744,94 +1839,290 @@ document.addEventListener("DOMContentLoaded", async () => {
         }
 
 
-        // ----------------------------------------------------
-        // MONTAR PEDIDO
-        // ----------------------------------------------------
-
-        const itensPedido =
-            carrinho
-                .map(
-                    item =>
-                        `  - ${item.quantidade}x ${item.nome}`
-                )
-                .join("\n");
-
+        // ========================================================
+        // CALCULAR VALORES
+        // ========================================================
 
         const subtotal =
             carrinho.reduce(
                 (acc, item) =>
                     acc +
-                    (
-                        item.preco *
-                        item.quantidade
-                    ),
+                    Number(item.preco) *
+                    Number(item.quantidade),
                 0
             );
 
 
         const discountAmount =
-            calcularDesconto(
-                subtotal
+            calcularDesconto(subtotal);
+
+
+        const total =
+            subtotal - discountAmount;
+
+
+        // ========================================================
+        // PAGAMENTO
+        // ========================================================
+
+        let paymentMethod = null;
+        let trocoPara = null;
+
+        if (tipoEntrega === "delivery") {
+
+            const paymentRadio =
+                document.querySelector(
+                    'input[name="payment"]:checked'
+                );
+
+            if (paymentRadio) {
+
+                paymentMethod =
+                    paymentRadio.value;
+            }
+
+
+            if (
+                paymentMethod === "Dinheiro"
+            ) {
+
+                const trocoInput =
+                    document.getElementById(
+                        "troco-para"
+                    );
+
+                trocoPara =
+                    trocoInput.value || null;
+            }
+        }
+
+
+        // ========================================================
+        // DADOS DO CLIENTE
+        // ========================================================
+
+        let cliente = {};
+
+        if (tipoEntrega === "delivery") {
+
+            cliente = {
+
+                nome:
+                    document
+                        .getElementById(
+                            "delivery-name"
+                        )
+                        .value
+                        .trim(),
+
+                telefone:
+                    document
+                        .getElementById(
+                            "delivery-phone"
+                        )
+                        .value
+                        .trim(),
+
+                cep:
+                    document
+                        .getElementById(
+                            "delivery-cep"
+                        )
+                        .value
+                        .trim(),
+
+                endereco:
+                    document
+                        .getElementById(
+                            "delivery-address"
+                        )
+                        .value
+                        .trim()
+            };
+
+        } else {
+
+            const dataInput =
+                document.getElementById(
+                    "pickup-date"
+                ).value;
+
+            const [year, month, day] =
+                dataInput.split("-");
+
+            cliente = {
+
+                nome:
+                    document
+                        .getElementById(
+                            "pickup-name"
+                        )
+                        .value
+                        .trim(),
+
+                dataRetirada:
+                    dataInput,
+
+                dataRetiradaFormatada:
+                    `${day}/${month}/${year}`,
+
+                horaRetirada:
+                    document
+                        .getElementById(
+                            "pickup-time"
+                        )
+                        .value
+            };
+        }
+
+
+        // ========================================================
+        // ITENS DA VENDA
+        // ========================================================
+
+        const itensVenda =
+            carrinho.map((item) => ({
+
+                id: item.id,
+
+                nome: item.nome,
+
+                marca: item.marca || "",
+
+                preco:
+                    Number(item.preco),
+
+                quantidade:
+                    Number(item.quantidade),
+
+                subtotal:
+                    Number(item.preco) *
+                    Number(item.quantidade)
+
+            }));
+
+
+        // ========================================================
+        // REGISTRAR VENDA NO FIREBASE
+        // ========================================================
+
+        const venda = {
+
+            origem: "catalogo",
+
+            status: "pendente",
+
+            itens: itensVenda,
+
+            cliente,
+
+            tipoEntrega,
+
+            pagamento: paymentMethod,
+
+            trocoPara,
+
+            cupom:
+                appliedCoupon
+                    ? appliedCoupon.codigo
+                    : null,
+
+            subtotal,
+
+            desconto:
+                discountAmount,
+
+            total,
+
+            criadoEm:
+                firebase.firestore.FieldValue
+                    .serverTimestamp()
+        };
+
+
+        try {
+
+            await db
+                .collection("vendas")
+                .add(venda);
+
+
+            console.log(
+                "Venda registrada no Firebase:",
+                venda
             );
 
 
-        let cupomInfo = "";
+        } catch (error) {
 
+            console.error(
+                "Erro ao registrar venda:",
+                error
+            );
+
+            alert(
+                "Não foi possível registrar o pedido. Tente novamente."
+            );
+
+            return;
+        }
+
+
+        // ========================================================
+        // MONTAR MENSAGEM DO WHATSAPP
+        // ========================================================
+
+        const numeroWhatsApp =
+            NUMERO_WHATSAPP;
+
+        const itensPedido =
+            carrinho
+                .map(
+                    (item) =>
+                        `  - ${item.quantidade}x ${item.nome}`
+                )
+                .join("\n");
+
+        let cupomInfo = "";
 
         if (appliedCoupon) {
 
             cupomInfo =
-                `\n*Cupom Aplicado:* ${appliedCoupon.codigo} (${formatarMoeda(
-                    discountAmount
-                )})`;
+                `\n*Cupom Aplicado:* ${appliedCoupon.codigo} (${formatarMoeda(discountAmount)})`;
         }
-
-
-        const total =
-            subtotal -
-            discountAmount;
-
 
         let mensagem =
             `*-- NOVO PEDIDO CUTELARIA PETS --*\n\n` +
-            `*Itens:*\n${itensPedido}\n\n` +
+
+            `*Itens:*\n` +
+            `${itensPedido}\n\n` +
+
             `*Subtotal:* ${formatarMoeda(subtotal)}` +
+
             `${cupomInfo}\n` +
+
             `*Total:* ${formatarMoeda(total)}\n\n` +
+
             `-------------------------\n\n`;
 
 
-        // ----------------------------------------------------
+        // ========================================================
         // ENTREGA
-        // ----------------------------------------------------
+        // ========================================================
 
-        if (
-            tipoEntrega ===
-            "delivery"
-        ) {
+        if (tipoEntrega === "delivery") {
 
             const nome =
-                document.getElementById(
-                    "delivery-name"
-                ).value;
-
+                cliente.nome;
 
             const phone =
-                document.getElementById(
-                    "delivery-phone"
-                ).value;
+                cliente.telefone;
 
+            const cep =
+                cliente.cep;
 
             const address =
-                document.getElementById(
-                    "delivery-address"
-                ).value;
-
-
-            const paymentMethod =
-                document.querySelector(
-                    'input[name="payment"]:checked'
-                ).value;
+                cliente.endereco;
 
 
             let paymentInfo =
@@ -1839,84 +2130,57 @@ document.addEventListener("DOMContentLoaded", async () => {
 
 
             if (
-                paymentMethod ===
-                "Dinheiro"
+                paymentMethod === "Dinheiro"
             ) {
 
-                const troco =
-                    document.getElementById(
-                        "troco-para"
-                    ).value;
-
-
                 paymentInfo +=
-                    troco
-                        ? ` (Troco para R$ ${troco})`
+                    trocoPara
+                        ? ` (Troco para R$ ${trocoPara})`
                         : " (Não precisa de troco)";
             }
 
 
             mensagem +=
+
                 `*Tipo de Pedido:* Entrega\n\n` +
+
                 `*Nome:* ${nome}\n` +
+
                 `*Telefone:* ${phone}\n` +
+
+                `*CEP:* ${cep}\n` +
+
                 `*Endereço:* ${address}\n\n` +
+
                 `${paymentInfo}`;
         }
 
 
-        // ----------------------------------------------------
+        // ========================================================
         // RETIRADA
-        // ----------------------------------------------------
+        // ========================================================
 
         else {
 
-            const nome =
-                document.getElementById(
-                    "pickup-name"
-                ).value;
-
-
-            const dataInput =
-                document.getElementById(
-                    "pickup-date"
-                ).value;
-
-
-            const hora =
-                document.getElementById(
-                    "pickup-time"
-                ).value;
-
-
-            const [
-                year,
-                month,
-                day
-            ] =
-                dataInput.split("-");
-
-
-            const dataFormatada =
-                `${day}/${month}/${year}`;
-
-
             mensagem +=
+
                 `*Tipo de Pedido:* Retirada\n\n` +
-                `*Nome para Retirada:* ${nome}\n` +
-                `*Data Agendada:* ${dataFormatada}\n` +
-                `*Hora Agendada:* ${hora}`;
+
+                `*Nome para Retirada:* ${cliente.nome}\n` +
+
+                `*Data Agendada:* ${cliente.dataRetiradaFormatada}\n` +
+
+                `*Hora Agendada:* ${cliente.horaRetirada}`;
         }
 
 
-        // ----------------------------------------------------
-        // WHATSAPP
-        // ----------------------------------------------------
+        // ========================================================
+        // ABRIR WHATSAPP
+        // ========================================================
 
         const url =
-            `https://wa.me/${NUMERO_WHATSAPP}?text=${encodeURIComponent(
-                mensagem
-            )}`;
+            `https://wa.me/${numeroWhatsApp}` +
+            `?text=${encodeURIComponent(mensagem)}`;
 
 
         window.open(
@@ -2348,5 +2612,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             }
         });
     });
+
+
 
 });

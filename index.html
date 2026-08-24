@@ -84,11 +84,11 @@
             </div>
 
             <div class="NavHeader">
-                <p class="LinkHEader" id="LinkAbout">Sobre Nós</p>
-                <p class="LinkHEader" id="LinkProducts">Produtos</p>
-                <p class="LinkHEader" id="LinkProcess">Processo</p>
-                <p class="LinkHEader" id="LinkLocate">Localização</p>
-                <p class="LinkHEader" id="FAQLocate">FAQ</p>
+                <p class="LinkHEader" id="LinkAbout" onclick="ShowAbout()">Sobre Nós</p>
+                <p class="LinkHEader" id="LinkProducts" onclick="ShowProdutcs()">Produtos</p>
+                <p class="LinkHEader" id="LinkProcess" onclick="ShowProcess()">Processo</p>
+                <p class="LinkHEader" id="LinkLocate" onclick="ShowLocal()">Localização</p>
+                <p class="LinkHEader" id="FAQLocate" onclick="ShowFaq()">FAQ</p>
             </div>
 
             <div class="cart-icon"> <i class="fa-solid fa-cart-shopping"></i> <span class="cart-badge">0</span> </div>
@@ -104,16 +104,17 @@
                 </h1>
 
                 <p class="hero-description" data-aos="fade-down" data-aos-delay="500" data-aos-duration="800">
-                    Recuperamos lâminas, tesouras e equipamentos de banho e tosa para que sua equipe
-                    continue produzindo com máxima eficiência, segurança e precisão.
+                    Somos especializados em afiação de lâminas e tesouras e manutenção de equipamentos
+                    para banho e tosa, atendendo pet shops e profissionais que precisam de precisão,
+                    segurança e alto desempenho.
                 </p>
 
                 <div class="hero-actions">
-                    <a href="https://wa.me/558396166367" data-aos="fade-down" data-aos-delay="700"
+                    <a href="#" id="btn-whatsapp-orcamento" data-aos="fade-down" data-aos-delay="700"
                         data-aos-duration="800" target="_blank" class="hero-btn primary">Solicitar
                         orçamento</a>
                     <button href="#servicos" class="hero-btn secondary" data-aos="fade-down" data-aos-delay="900"
-                        data-aos-duration="800" id="scrollToServicesBtn">Ver serviços</button>
+                        data-aos-duration="800" id="scrollToServicesBtn" onclick="ShowProjects()">Ver serviços</button>
                 </div>
 
             </div>
@@ -242,14 +243,15 @@
             alt="image-example-bussines">
 
         <div class="TextsAbout">
-            <p class="TitleAbout" data-aos="fade-down" data-aos-delay="300" data-aos-duration="800">SOBRE NÓS</p>
+            <p class="TitleAbout" data-aos="fade-down" data-aos-delay="300" data-aos-duration="800">SOBRE A CUTELARIA
+                PETS</p>
             <h2 class="H2About" data-aos="fade-down" data-aos-delay="500" data-aos-duration="800">Desde 2023 resolvendo
                 o que os outros não conseguem</h2>
-            <p class="PAbout" data-aos="fade-down" data-aos-delay="700" data-aos-duration="800">A Vantagem Técnica
-                nasceu dentro do mercado pet, atendendo tosadores que precisavam de um
-                padrão de
-                afiação que não existia. Hoje, somos referência em afiação de Lâminas, tesouras e assistência técnica de
-                equipamentos de banho e tosa.</p>
+            <p class="PAbout" data-aos="fade-down" data-aos-delay="700" data-aos-duration="800">A Cutelaria Pets atua
+                com afiação de lâminas, tesouras e assistência técnica
+                de equipamentos utilizados em banho e tosa. Nosso trabalho é voltado para
+                pet shops, tosadores e profissionais que dependem de equipamentos precisos,
+                seguros e bem regulados.</p>
 
             <ul class="ULAbout" data-aos="fade-down" data-aos-delay="900" data-aos-duration="800">
                 <li class="LiAbout">Foco 100% no mercado profissional pet</li>
@@ -269,8 +271,7 @@
                     </span>
 
                     <h2 data-aos="fade-down" data-aos-delay="200" data-aos-duration="800">
-                        Tudo o que seu equipamento
-                        precisa em um único lugar.
+                        Serviços de afiação e manutenção para equipamentos de banho e tosa
                     </h2>
                 </div>
 
@@ -555,7 +556,7 @@
         <h1 class="TitleSecCall" data-aos="fade-down" data-aos-duration="800">NÃO DEIXE EQUIPAMENTOS PARADOS REDUZIREM O
             FATURAMENTO DO SEU PETSHOP</h1>
 
-        <a class="LinkSecCall" href="https://wa.me/558396166367" target="_blank" data-aos="fade-down"
+        <a class="LinkSecCall" id="btn-whatsapp-orcamento-final" href="#" target="_blank" data-aos="fade-down"
             data-aos-delay="200" data-aos-duration="800">SOCILICAR ORÇAMENTO PELO WHATSAPP</a>
 
         <p class="LocateP">João Pessoa - R. José Francisco da Silva, 2094 - Cristo Redentor</p>
@@ -668,7 +669,7 @@
 </body>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
-<script src="./script.js"></script>
+<script src="./scripts4.js"></script>
 <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
 <script>
     AOS.init();
