@@ -238,7 +238,9 @@
 
     .btn-primary {
       background: var(--gold);
-      color: #000
+      color: #000;
+      right: 50px;
+      bottom: 50px;
     }
 
     .btn-primary:hover {
@@ -380,6 +382,23 @@
       color: var(--gold)
     }
 
+
+    .badge-pendente {
+      background: #302700;
+      color: #ffc107;
+    }
+
+    .badge-finalizada {
+      background: #0e2e18;
+      color: var(--green);
+    }
+
+    .badge-cancelada {
+      background: #2a1010;
+      color: var(--red);
+    }
+
+
     .actions-cell {
       display: flex;
       gap: 6px
@@ -499,6 +518,138 @@
       margin-top: 24px
     }
 
+    /* =========================
+   MODAL DE VENDA
+========================= */
+
+    .venda-detalhes {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .venda-secao {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 16px;
+    }
+
+    .venda-secao h3 {
+      font-size: .85rem;
+      color: var(--gold);
+      margin-bottom: 14px;
+      display: flex;
+      align-items: center;
+      gap: 7px;
+    }
+
+    .venda-info-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    .venda-info {
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+    }
+
+    .venda-info.full {
+      grid-column: 1 / -1;
+    }
+
+    .venda-info .label {
+      font-size: .72rem;
+      color: var(--muted);
+    }
+
+    .venda-info .valor {
+      font-size: .88rem;
+      color: var(--text);
+    }
+
+    .venda-itens {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .venda-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 10px;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+    }
+
+    .venda-item-nome {
+      font-size: .85rem;
+      font-weight: 600;
+    }
+
+    .venda-item-qtd {
+      font-size: .78rem;
+      color: var(--muted);
+    }
+
+    .venda-item-preco {
+      font-size: .85rem;
+      color: var(--gold);
+      font-weight: 600;
+    }
+
+    .venda-resumo {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .venda-resumo-linha {
+      display: flex;
+      justify-content: space-between;
+      gap: 15px;
+      font-size: .85rem;
+    }
+
+    .venda-resumo-linha.total {
+      padding-top: 10px;
+      margin-top: 5px;
+      border-top: 1px solid var(--border);
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--gold);
+    }
+
+    .venda-acoes {
+      display: flex;
+      gap: 10px;
+      margin-top: 5px;
+    }
+
+    .venda-acoes .btn {
+      flex: 1;
+      justify-content: center;
+    }
+
+    @media (max-width: 600px) {
+      .venda-info-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .venda-info.full {
+        grid-column: auto;
+      }
+
+      .venda-acoes {
+        flex-direction: column;
+      }
+    }
+
     .cat-grid {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
@@ -610,6 +761,177 @@
       font-size: .72rem;
       color: var(--muted);
       line-height: 1.4
+    }
+
+    /* ================================
+   CONFIGURAÇÃO DOS SERVIÇOS
+================================ */
+
+    .services-config-section {
+      max-width: 640px;
+      margin-top: 30px;
+    }
+
+    .services-config-header {
+      margin-bottom: 20px;
+    }
+
+    .services-config-header h3 {
+      margin: 0 0 6px;
+      font-size: 20px;
+    }
+
+    .services-config-header p {
+      margin: 0;
+      color: #777;
+      font-size: 14px;
+    }
+
+
+    /* CARD DO SERVIÇO */
+
+    .service-config-card {
+      background: #161616;
+      border: 1px solid #272727;
+      border-radius: 10px;
+      padding: 20px;
+      margin-bottom: 16px;
+    }
+
+
+    /* TÍTULO */
+
+    .service-config-title {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+
+    .service-config-title h4 {
+      margin: 0 0 3px;
+      font-size: 16px;
+    }
+
+    .service-config-title span:not(.service-config-number) {
+      font-size: 13px;
+      color: #888;
+    }
+
+    .service-config-number {
+      width: 36px;
+      height: 36px;
+
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      border-radius: 8px;
+
+      background: #212121;
+      color: #00ff22;
+
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+
+    /* CAMPOS */
+
+    .service-config-fields {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .service-config-field {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+    }
+
+    .service-config-field label {
+      font-size: 14px;
+      color: #fffdfd;
+      line-height: 1.4;
+    }
+
+
+    /* INPUT DE PREÇO */
+
+    .price-input {
+      display: flex;
+      align-items: center;
+
+      min-width: 125px;
+
+      border: 1px solid #ddd;
+      border-radius: 7px;
+
+      background: #fff;
+
+      overflow: hidden;
+    }
+
+    .price-input span {
+      padding-left: 10px;
+
+      font-size: 13px;
+      font-weight: 600;
+
+      color: #777;
+    }
+
+    .price-input input {
+      width: 85px;
+
+      border: none;
+      outline: none;
+
+      padding: 9px 8px;
+
+      font-size: 14px;
+
+      background: transparent;
+    }
+
+
+    /* REMOVE SETAS DO INPUT NUMBER */
+
+    .price-input input::-webkit-outer-spin-button,
+    .price-input input::-webkit-inner-spin-button {
+      -webkit-appearance: none;
+      margin: 0;
+    }
+
+    .price-input input[type="number"] {
+      -moz-appearance: textfield;
+    }
+
+
+    /* RESPONSIVO */
+
+    @media (max-width: 600px) {
+
+      .service-config-card {
+        padding: 16px;
+      }
+
+      .service-config-field {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 7px;
+      }
+
+      .price-input {
+        width: 100%;
+      }
+
+      .price-input input {
+        width: 100%;
+      }
+
     }
 
     @media(max-width:800px) {
@@ -794,7 +1116,18 @@
         </div>
 
         <div id="tab-vendas" class="tab-panel">
-          <div class="toolbar"><input type="month" id="relatorio-mes" onchange="carregarRelatorio()"></div>
+          <div class="toolbar">
+
+            <input type="month" id="relatorio-mes" onchange="carregarRelatorio()">
+
+            <select id="relatorio-status" onchange="renderRelatorio()">
+              <option value="">Todos os status</option>
+              <option value="pendente">Pendentes</option>
+              <option value="finalizada">Finalizadas</option>
+              <option value="cancelada">Canceladas</option>
+            </select>
+
+          </div>
           <div class="stats-row">
             <div class="stat-card">
               <div class="num" id="relatorio-stat-qtd">–</div>
@@ -819,6 +1152,7 @@
                   <th>Itens</th>
                   <th>Pagamento</th>
                   <th>Total</th>
+                  <th>Status</th>
                   <th>Ações</th>
                 </tr>
               </thead>
@@ -863,6 +1197,168 @@
             <button class="btn btn-primary" onclick="salvarConfiguracoes()"><i class="fa-solid fa-floppy-disk"></i>
               Salvar Configurações</button>
           </div>
+
+          <!-- CONFIGURAÇÃO DOS VALORES DOS SERVIÇOS -->
+          <div class="services-config-section">
+
+            <div class="services-config-header">
+              <div>
+                <h3>Valores dos Serviços</h3>
+                <p>Altere os preços exibidos na seção de serviços do site.</p>
+              </div>
+            </div>
+
+            <!-- SERVIÇO 01 -->
+            <div class="service-config-card">
+
+              <div class="service-config-title">
+                <span class="service-config-number">01</span>
+
+                <div>
+                  <h4>Afiação de Lâminas</h4>
+                  <span>Valores de afiação</span>
+                </div>
+              </div>
+
+              <div class="service-config-fields">
+
+                <div class="service-config-field">
+                  <label for="servico-01-preco-01">
+                    Afiação de lâmina comum
+                  </label>
+
+                  <div class="price-input">
+                    <span>R$</span>
+                    <input type="number" id="servico-01-preco-01" min="0" step="0.01" placeholder="25,00">
+                  </div>
+                </div>
+
+                <div class="service-config-field">
+                  <label for="servico-01-preco-02">
+                    Afiação de lâmina de acabamento
+                  </label>
+
+                  <div class="price-input">
+                    <span>R$</span>
+                    <input type="number" id="servico-01-preco-02" min="0" step="0.01" placeholder="45,00">
+                  </div>
+                </div>
+
+              </div>
+
+            </div>
+
+
+            <!-- SERVIÇO 02 -->
+            <div class="service-config-card">
+
+              <div class="service-config-title">
+                <span class="service-config-number">02</span>
+
+                <div>
+                  <h4>Afiação de Tesouras</h4>
+                  <span>Valores de afiação</span>
+                </div>
+              </div>
+
+              <div class="service-config-fields">
+
+                <div class="service-config-field">
+                  <label for="servico-02-preco-01">
+                    Tesoura Reta / Curva
+                  </label>
+
+                  <div class="price-input">
+                    <span>R$</span>
+                    <input type="number" id="servico-02-preco-01" min="0" step="0.01" placeholder="35,00">
+                  </div>
+                </div>
+
+                <div class="service-config-field">
+                  <label for="servico-02-preco-02">
+                    Tesoura Semidentada / Tubarão
+                  </label>
+
+                  <div class="price-input">
+                    <span>R$</span>
+                    <input type="number" id="servico-02-preco-02" min="0" step="0.01" placeholder="40,00">
+                  </div>
+                </div>
+
+                <div class="service-config-field">
+                  <label for="servico-02-preco-03">
+                    Semidentada Curva / Tubarão Curva
+                  </label>
+
+                  <div class="price-input">
+                    <span>R$</span>
+                    <input type="number" id="servico-02-preco-03" min="0" step="0.01" placeholder="45,00">
+                  </div>
+                </div>
+
+              </div>
+
+            </div>
+
+
+            <!-- SERVIÇO 03 -->
+            <div class="service-config-card">
+
+              <div class="service-config-title">
+                <span class="service-config-number">03</span>
+
+                <div>
+                  <h4>Assistência Técnica</h4>
+                  <span>Valores de manutenção</span>
+                </div>
+              </div>
+
+              <div class="service-config-fields">
+
+                <div class="service-config-field">
+                  <label for="servico-03-preco-01">
+                    Manutenção de soprador — 2 motores
+                  </label>
+
+                  <div class="price-input">
+                    <span>R$</span>
+                    <input type="number" id="servico-03-preco-01" min="0" step="0.01" placeholder="110,00">
+                  </div>
+                </div>
+
+                <div class="service-config-field">
+                  <label for="servico-03-preco-02">
+                    Manutenção de soprador — 1 motor
+                  </label>
+
+                  <div class="price-input">
+                    <span>R$</span>
+                    <input type="number" id="servico-03-preco-02" min="0" step="0.01" placeholder="90,00">
+                  </div>
+                </div>
+
+                <div class="service-config-field">
+                  <label for="servico-03-preco-03">
+                    Manutenção de secadores
+                  </label>
+
+                  <div class="price-input">
+                    <span>R$</span>
+                    <input type="number" id="servico-03-preco-03" min="0" step="0.01" placeholder="90,00">
+                  </div>
+                </div>
+
+              </div>
+
+            </div>
+
+            <div class="modal-footer" style="justify-content:flex-start">
+              <button class="btn btn-primary" onclick="salvarConfiguracoes()"><i class="fa-solid fa-floppy-disk"></i>
+                Salvar Configurações</button>
+            </div>
+
+          </div>
+
         </div>
 
       </div>
@@ -925,7 +1421,7 @@
         <div class="form-group full" style="flex-direction:row;gap:20px;align-items:center;flex-wrap:wrap">
           <label class="toggle-row"><input type="checkbox" id="form-offer"> Oferta</label>
           <label class="toggle-row"><input type="checkbox" id="form-ativo" checked> Produto ativo</label>
-          <label class="toggle-row"><input type="checkbox" id="form-destaque"> Destaque</label>
+          <label class="toggle-row" style="display: none;"><input type="checkbox" id="form-destaque"> Destaque</label>
         </div>
       </div>
       <div class="modal-footer">
@@ -982,7 +1478,28 @@
     </div>
   </div>
 
+  <!-- MODAL DETALHES DA VENDA -->
+  <div class="modal-overlay" id="modal-venda">
+    <div class="modal" style="width:760px">
+
+      <button class="modal-close" onclick="fecharModal('modal-venda')">
+        &times;
+      </button>
+
+      <h2 id="venda-modal-titulo">
+        <i class="fa-solid fa-receipt"></i>
+        Detalhes da venda
+      </h2>
+
+      <div id="venda-modal-conteudo">
+        <!-- preenchido pelo JavaScript -->
+      </div>
+
+    </div>
+  </div>
+
   <!-- CONFIRMAÇÃO -->
+
   <div class="modal-overlay" id="confirm-modal">
     <div class="modal" style="width:360px">
       <button class="modal-close" onclick="fecharModal('confirm-modal')">&times;</button>
@@ -1013,14 +1530,26 @@
     firebase.initializeApp(firebaseConfig);
     const db = firebase.firestore();
     const auth = firebase.auth();
-    auth.setPersistence(firebase.auth.Auth.Persistence.SESSION);
+    auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL);
 
     const CONFIG_PADRAO = {
       whatsapp: "558396166367",
       retiradaDias: [0, 1, 2, 3, 4, 5, 6],
       retiradaHoraInicio: "08:00",
       retiradaHoraFim: "18:00",
-      retiradaIntervalo: 60
+      retiradaIntervalo: 60,
+
+      // Valores dos serviços
+      servico01Preco01: 25,
+      servico01Preco02: 45,
+
+      servico02Preco01: 35,
+      servico02Preco02: 40,
+      servico02Preco03: 45,
+
+      servico03Preco01: 110,
+      servico03Preco02: 90,
+      servico03Preco03: 90
     };
 
     let todosProdutos = [], todasCategorias = [], todosCupons = [], vendasRelatorio = [];
@@ -1060,6 +1589,109 @@
       }
 
       return resultado.url;
+    }
+
+    async function alterarStatusVenda(docId, novoStatus) {
+
+      try {
+
+        const dados = {
+          status: novoStatus
+        };
+
+        if (novoStatus === "finalizada") {
+
+          dados.finalizadaEm =
+            firebase.firestore.FieldValue.serverTimestamp();
+
+        }
+
+        if (novoStatus === "cancelada") {
+
+          dados.canceladaEm =
+            firebase.firestore.FieldValue.serverTimestamp();
+
+        }
+
+        await db
+          .collection("vendas")
+          .doc(docId)
+          .update(dados);
+
+
+        toast(
+          novoStatus === "finalizada"
+            ? "Venda finalizada com sucesso!"
+            : "Venda cancelada.",
+          "ok"
+        );
+
+
+        await carregarRelatorio();
+
+      } catch (e) {
+
+        console.error(e);
+
+        toast(
+          "Erro ao alterar status: " + e.message,
+          "err"
+        );
+      }
+    }
+
+    function finalizarVenda(docId) {
+
+      fecharModal("modal-venda");
+
+      document.getElementById("confirm-msg").textContent =
+        "Confirmar que esta venda foi realmente realizada?";
+
+      document.getElementById("confirm-ok-btn").textContent =
+        "Finalizar venda";
+
+      document.getElementById("confirm-ok-btn").className =
+        "btn btn-primary";
+
+      document.getElementById("confirm-ok-btn").onclick =
+        async () => {
+
+          fecharModal("confirm-modal");
+
+          await alterarStatusVenda(
+            docId,
+            "finalizada"
+          );
+        };
+
+      abrirModal("confirm-modal");
+    }
+
+    function cancelarVenda(docId) {
+
+      fecharModal("modal-venda");
+
+      document.getElementById("confirm-msg").textContent =
+        "Tem certeza que deseja cancelar esta venda?";
+
+      document.getElementById("confirm-ok-btn").textContent =
+        "Cancelar venda";
+
+      document.getElementById("confirm-ok-btn").className =
+        "btn btn-danger";
+
+      document.getElementById("confirm-ok-btn").onclick =
+        async () => {
+
+          fecharModal("confirm-modal");
+
+          await alterarStatusVenda(
+            docId,
+            "cancelada"
+          );
+        };
+
+      abrirModal("confirm-modal");
     }
 
     document.getElementById("form-arquivos").addEventListener("change", async function () {
@@ -1501,19 +2133,581 @@
       }
     }
     function renderRelatorio() {
-      const total = vendasRelatorio.reduce((s, v) => s + Number(v.total || 0), 0);
-      document.getElementById("relatorio-stat-qtd").textContent = vendasRelatorio.length;
-      document.getElementById("relatorio-stat-total").textContent = "R$ " + moeda(total);
-      document.getElementById("relatorio-stat-ticket").textContent = "R$ " + moeda(vendasRelatorio.length ? total / vendasRelatorio.length : 0);
-      const tbody = document.getElementById("relatorio-tabela");
-      if (!vendasRelatorio.length) { tbody.innerHTML = '<tr><td colspan="7"><div class="empty-state"><i class="fa-solid fa-chart-column"></i><p>Nenhuma venda encontrada neste período.</p></div></td></tr>'; return }
-      tbody.innerHTML = vendasRelatorio.map(v => linhaVenda(v)).join("");
+
+      const filtroStatus =
+        document.getElementById("relatorio-status")?.value || "";
+
+      // Filtra somente para exibição na tabela
+      const vendasFiltradas = filtroStatus
+        ? vendasRelatorio.filter(v => {
+          const status = v.status || "pendente";
+          return status === filtroStatus;
+        })
+        : vendasRelatorio;
+
+
+      // ==========================================
+      // SOMENTE VENDAS FINALIZADAS CONTABILIZAM
+      // ==========================================
+
+      const vendasFinalizadas = vendasRelatorio.filter(v => {
+        return (v.status || "pendente") === "finalizada";
+      });
+
+
+      // ==========================================
+      // FATURAMENTO
+      // ==========================================
+
+      const total = vendasFinalizadas.reduce(
+        (s, v) => s + Number(v.total || 0),
+        0
+      );
+
+
+      // ==========================================
+      // QUANTIDADE DE VENDAS
+      // ==========================================
+
+      const quantidade = vendasFinalizadas.length;
+
+
+      // ==========================================
+      // TICKET MÉDIO
+      // ==========================================
+
+      const ticketMedio = quantidade
+        ? total / quantidade
+        : 0;
+
+
+      // ==========================================
+      // ATUALIZA OS INDICADORES
+      // ==========================================
+
+      document.getElementById("relatorio-stat-qtd").textContent =
+        quantidade;
+
+      document.getElementById("relatorio-stat-total").textContent =
+        "R$ " + moeda(total);
+
+      document.getElementById("relatorio-stat-ticket").textContent =
+        "R$ " + moeda(ticketMedio);
+
+
+      // ==========================================
+      // TABELA
+      // ==========================================
+
+      const tbody =
+        document.getElementById("relatorio-tabela");
+
+
+      if (!vendasFiltradas.length) {
+
+        tbody.innerHTML = `
+            <tr>
+                <td colspan="8">
+                    <div class="empty-state">
+                        <i class="fa-solid fa-chart-column"></i>
+                        <p>Nenhuma venda encontrada neste período.</p>
+                    </div>
+                </td>
+            </tr>
+        `;
+
+        return;
+      }
+
+
+      tbody.innerHTML =
+        vendasFiltradas
+          .map(v => linhaVenda(v))
+          .join("");
     }
+
+    function abrirVenda(docId) {
+
+      const venda = vendasRelatorio.find(v => v.docId === docId);
+
+      if (!venda) {
+        toast("Venda não encontrada.", "err");
+        return;
+      }
+
+      const cliente =
+        venda.cliente && typeof venda.cliente === "object"
+          ? venda.cliente
+          : {};
+
+      const status = venda.status || "pendente";
+
+      // =========================
+      // DATA
+      // =========================
+
+      const dt = venda.criadoEm?.toDate
+        ? venda.criadoEm.toDate()
+        : null;
+
+      const dataVenda = dt
+        ? dt.toLocaleDateString("pt-BR")
+        : "–";
+
+      const horaVenda = dt
+        ? dt.toLocaleTimeString("pt-BR", {
+          hour: "2-digit",
+          minute: "2-digit"
+        })
+        : "–";
+
+
+      // =========================
+      // STATUS
+      // =========================
+
+      let statusHtml = "";
+
+      if (status === "finalizada") {
+
+        statusHtml =
+          `<span class="badge badge-finalizada">Finalizada</span>`;
+
+      } else if (status === "cancelada") {
+
+        statusHtml =
+          `<span class="badge badge-cancelada">Cancelada</span>`;
+
+      } else {
+
+        statusHtml =
+          `<span class="badge badge-pendente">Pendente</span>`;
+      }
+
+
+      // =========================
+      // ITENS
+      // =========================
+
+      const itens = (venda.itens || [])
+        .map(item => {
+
+          if (!item || typeof item !== "object") {
+            return "";
+          }
+
+          const nome =
+            item.nome ||
+            item.produtoNome ||
+            item.name ||
+            item.produto?.nome ||
+            item.produto?.name ||
+            "Produto";
+
+          const quantidade =
+            item.qtd ??
+            item.quantidade ??
+            item.quantity ??
+            1;
+
+          const preco =
+            Number(
+              item.preco ??
+              item.precoUnitario ??
+              item.valor ??
+              0
+            );
+
+          const subtotalItem =
+            preco * Number(quantidade);
+
+          return `
+        <div class="venda-item">
+
+          <div>
+            <div class="venda-item-nome">
+              ${escapeHtml(nome)}
+            </div>
+
+            <div class="venda-item-qtd">
+              ${quantidade}x
+              ${preco ? `R$ ${moeda(preco)}` : ""}
+            </div>
+          </div>
+
+          <div class="venda-item-preco">
+            R$ ${moeda(subtotalItem)}
+          </div>
+
+        </div>
+      `;
+        })
+        .filter(Boolean)
+        .join("");
+
+
+      // =========================
+      // PAGAMENTO
+      // =========================
+
+      let pagamento = "–";
+
+      if (Array.isArray(venda.pagamentos)) {
+
+        pagamento = venda.pagamentos
+          .map(p => {
+
+            if (!p || typeof p !== "object") {
+              return "";
+            }
+
+            const forma =
+              p.forma ||
+              p.metodo ||
+              p.pagamento ||
+              "";
+
+            const valor =
+              p.valor ?? 0;
+
+            return forma
+              ? `${escapeHtml(forma)} — R$ ${moeda(valor)}`
+              : "";
+          })
+          .filter(Boolean)
+          .join("<br>");
+
+      } else if (typeof venda.pagamento === "string") {
+
+        pagamento = escapeHtml(venda.pagamento);
+
+      } else if (
+        venda.pagamento &&
+        typeof venda.pagamento === "object"
+      ) {
+
+        pagamento = escapeHtml(
+          venda.pagamento.forma ||
+          venda.pagamento.metodo ||
+          "–"
+        );
+      }
+
+
+      // =========================
+      // ENDEREÇO
+      // =========================
+
+      const cep =
+        cliente.cep ||
+        venda.cep ||
+        "–";
+
+      const endereco =
+        cliente.endereco ||
+        cliente.logradouro ||
+        venda.endereco ||
+        "–";
+
+      const numero =
+        cliente.numero ||
+        venda.numero ||
+        "–";
+
+      const complemento =
+        cliente.complemento ||
+        venda.complemento ||
+        "";
+
+      const bairro =
+        cliente.bairro ||
+        venda.bairro ||
+        "–";
+
+      const cidade =
+        cliente.cidade ||
+        venda.cidade ||
+        "–";
+
+
+      // =========================
+      // TIPO DE ENTREGA
+      // =========================
+
+      const tipoEntrega =
+        venda.tipoEntrega === "pickup"
+          ? "Retirada na loja"
+          : venda.tipoEntrega === "delivery"
+            ? "Entrega"
+            : venda.tipoEntrega || "–";
+
+
+      // =========================
+      // TROCO
+      // =========================
+
+      const trocoPara = venda.trocoPara
+        ? `R$ ${moeda(venda.trocoPara)}`
+        : "–";
+
+
+      // =========================
+      // CLIENTE
+      // =========================
+
+      const nomeCliente =
+        cliente.nome ||
+        cliente.name ||
+        cliente.nomeCliente ||
+        "–";
+
+      const telefone =
+        cliente.telefone ||
+        cliente.celular ||
+        cliente.whatsapp ||
+        venda.telefone ||
+        "–";
+
+
+      // =========================
+      // CONTEÚDO
+      // =========================
+
+      document.getElementById("venda-modal-conteudo").innerHTML = `
+
+    <div class="venda-detalhes">
+
+      <!-- STATUS / DATA -->
+
+      <div class="venda-secao">
+
+        <h3>
+          <i class="fa-solid fa-circle-info"></i>
+          Informações do pedido
+        </h3>
+
+        <div class="venda-info-grid">
+
+          <div class="venda-info">
+            <span class="label">Status</span>
+            <span class="valor">
+              ${statusHtml}
+            </span>
+          </div>
+
+          <div class="venda-info">
+            <span class="label">Data</span>
+            <span class="valor">
+              ${dataVenda} às ${horaVenda}
+            </span>
+          </div>
+
+          <div class="venda-info">
+            <span class="label">Tipo de entrega</span>
+            <span class="valor">
+              ${escapeHtml(tipoEntrega)}
+            </span>
+          </div>
+
+        </div>
+
+      </div>
+
+
+      <!-- CLIENTE -->
+
+      <div class="venda-secao">
+
+        <h3>
+          <i class="fa-solid fa-user"></i>
+          Cliente
+        </h3>
+
+        <div class="venda-info-grid">
+
+          <div class="venda-info">
+            <span class="label">Nome</span>
+            <span class="valor">
+              ${escapeHtml(nomeCliente)}
+            </span>
+          </div>
+
+          <div class="venda-info">
+            <span class="label">Telefone / WhatsApp</span>
+            <span class="valor">
+              ${escapeHtml(telefone)}
+            </span>
+          </div>
+
+        </div>
+
+      </div>
+
+
+      <!-- ENDEREÇO -->
+
+      <div class="venda-secao">
+
+        <h3>
+          <i class="fa-solid fa-location-dot"></i>
+          Endereço
+        </h3>
+
+        <div class="venda-info-grid">
+
+          <div class="venda-info">
+            <span class="label">CEP</span>
+            <span class="valor">
+              ${escapeHtml(cep)}
+            </span>
+          </div>
+
+          
+
+          <div class="venda-info full">
+            <span class="label">Endereço</span>
+            <span class="valor">
+              ${escapeHtml(endereco)}
+            </span>
+          </div>
+
+        </div>
+
+      </div>
+
+
+      <!-- ITENS -->
+
+      <div class="venda-secao">
+
+        <h3>
+          <i class="fa-solid fa-box"></i>
+          Itens do pedido
+        </h3>
+
+        <div class="venda-itens">
+
+          ${itens ||
+        `<span style="color:var(--muted)">
+              Nenhum item encontrado.
+            </span>`
+        }
+
+        </div>
+
+      </div>
+
+
+      <!-- PAGAMENTO -->
+
+      <div class="venda-secao">
+
+        <h3>
+          <i class="fa-solid fa-credit-card"></i>
+          Pagamento
+        </h3>
+
+        <div class="venda-info-grid">
+
+          <div class="venda-info">
+            <span class="label">Forma de pagamento</span>
+            <span class="valor">
+              ${pagamento}
+            </span>
+          </div>
+
+        </div>
+
+      </div>
+
+
+      <!-- RESUMO -->
+
+      <div class="venda-secao">
+
+        <h3>
+          <i class="fa-solid fa-calculator"></i>
+          Resumo
+        </h3>
+
+        <div class="venda-resumo">
+
+          <div class="venda-resumo-linha">
+            <span>Subtotal</span>
+            <span>
+              R$ ${moeda(venda.subtotal)}
+            </span>
+          </div>
+
+          <div class="venda-resumo-linha">
+            <span>Desconto</span>
+            <span>
+              R$ ${moeda(venda.desconto)}
+            </span>
+          </div>
+
+          <div class="venda-resumo-linha total">
+            <span>Total</span>
+            <span>
+              R$ ${moeda(venda.total)}
+            </span>
+          </div>
+
+        </div>
+
+      </div>
+
+
+      <!-- AÇÕES -->
+
+      ${status === "pendente"
+          ? `
+            <div class="venda-acoes">
+
+              <button
+                class="btn btn-danger"
+                onclick="cancelarVenda('${venda.docId}')"
+              >
+                <i class="fa-solid fa-xmark"></i>
+                Cancelar venda
+              </button>
+
+              <button
+                class="btn btn-primary"
+                onclick="finalizarVenda('${venda.docId}')"
+              >
+                <i class="fa-solid fa-check"></i>
+                Finalizar venda
+              </button>
+
+            </div>
+          `
+          : ""
+        }
+
+    </div>
+  `;
+
+      abrirModal("modal-venda");
+    }
+
     function linhaVenda(v) {
 
       const dt = v.criadoEm?.toDate
         ? v.criadoEm.toDate()
         : null;
+
+      const status = v.status || "pendente";
+
+      let statusHtml = "";
+
+      if (status === "finalizada") {
+        statusHtml = `<span class="badge badge-finalizada">Finalizada</span>`;
+      } else if (status === "cancelada") {
+        statusHtml = `<span class="badge badge-cancelada">Cancelada</span>`;
+      } else {
+        statusHtml = `<span class="badge badge-pendente">Pendente</span>`;
+      }
 
 
       // =========================
@@ -1649,22 +2843,22 @@
         );
       }
 
-
       // =========================
       // LINHA DA TABELA
       // =========================
 
       return `
-    <tr>
+<tr onclick="abrirVenda('${v.docId}')"
+    style="cursor:pointer">
 
-      <td>
+    <td>
         ${dt
           ? dt.toLocaleDateString("pt-BR")
           : "–"
         }
-      </td>
+    </td>
 
-      <td>
+    <td>
         ${dt
           ? dt.toLocaleTimeString("pt-BR", {
             hour: "2-digit",
@@ -1672,46 +2866,59 @@
           })
           : "–"
         }
-      </td>
+    </td>
 
-      <td>
+    <td>
         ${escapeHtml(nomeCliente)}
-      </td>
+    </td>
 
-      <td
+    <td
         style="
-          max-width:260px;
-          font-size:.78rem;
-          color:var(--muted)
+            max-width:260px;
+            font-size:.78rem;
+            color:var(--muted)
         "
-      >
+    >
         ${itens || "–"}
-      </td>
+    </td>
 
-      <td>
+    <td>
         ${pagamento}
-      </td>
+    </td>
 
-      <td
+    <td
         style="
-          font-weight:700;
-          color:var(--gold)
+            font-weight:700;
+            color:var(--gold)
         "
-      >
+    >
         R$ ${moeda(v.total)}
-      </td>
+    </td>
 
-      <td>
-        <button
-          class="btn btn-danger btn-sm"
-          onclick="excluirVenda('${v.docId}')"
-        >
-          <i class="fa-solid fa-trash"></i>
-        </button>
-      </td>
+    <td>
+        ${statusHtml}
+    </td>
 
-    </tr>
-  `;
+    <td>
+
+        <div class="actions-cell">
+
+  <button
+      class="btn btn-danger btn-sm"
+      onclick="event.stopPropagation(); excluirVenda('${v.docId}')"
+      title="Excluir venda"
+  >
+      <i class="fa-solid fa-trash"></i>
+  </button>
+
+</div>
+
+    </td>
+
+</tr>
+`;
+
+
     }
     function excluirVenda(docId) {
       document.getElementById("confirm-msg").textContent = "Excluir esta venda? Esta ação não pode ser desfeita.";
@@ -1724,31 +2931,278 @@
 
     async function carregarConfiguracoes() {
       try {
+
         const doc = await db.collection("configuracoes").doc("geral").get();
-        const cfg = doc.exists ? { ...CONFIG_PADRAO, ...doc.data() } : CONFIG_PADRAO;
-        document.getElementById("config-whatsapp").value = cfg.whatsapp || "";
-        document.getElementById("config-hora-inicio").value = cfg.retiradaHoraInicio || "08:00";
-        document.getElementById("config-hora-fim").value = cfg.retiradaHoraFim || "18:00";
-        document.getElementById("config-intervalo").value = cfg.retiradaIntervalo || 60;
-        for (let i = 0; i <= 6; i++)document.getElementById("config-dia-" + i).checked = (cfg.retiradaDias || []).includes(i);
-      } catch (e) { toast("Erro ao carregar configurações: " + e.message, "err") }
+
+        const cfg = doc.exists
+          ? { ...CONFIG_PADRAO, ...doc.data() }
+          : CONFIG_PADRAO;
+
+
+        // =========================
+        // WHATSAPP
+        // =========================
+
+        document.getElementById("config-whatsapp").value =
+          cfg.whatsapp || "";
+
+
+        // =========================
+        // RETIRADA
+        // =========================
+
+        document.getElementById("config-hora-inicio").value =
+          cfg.retiradaHoraInicio || "08:00";
+
+        document.getElementById("config-hora-fim").value =
+          cfg.retiradaHoraFim || "18:00";
+
+        document.getElementById("config-intervalo").value =
+          cfg.retiradaIntervalo || 60;
+
+
+        for (let i = 0; i <= 6; i++) {
+
+          document.getElementById("config-dia-" + i).checked =
+            (cfg.retiradaDias || []).includes(i);
+
+        }
+
+
+        // =========================
+        // VALORES DOS SERVIÇOS
+        // =========================
+
+        document.getElementById("servico-01-preco-01").value =
+          cfg.servico01Preco01 ?? 25;
+
+        document.getElementById("servico-01-preco-02").value =
+          cfg.servico01Preco02 ?? 45;
+
+
+        document.getElementById("servico-02-preco-01").value =
+          cfg.servico02Preco01 ?? 35;
+
+        document.getElementById("servico-02-preco-02").value =
+          cfg.servico02Preco02 ?? 40;
+
+        document.getElementById("servico-02-preco-03").value =
+          cfg.servico02Preco03 ?? 45;
+
+
+        document.getElementById("servico-03-preco-01").value =
+          cfg.servico03Preco01 ?? 110;
+
+        document.getElementById("servico-03-preco-02").value =
+          cfg.servico03Preco02 ?? 90;
+
+        document.getElementById("servico-03-preco-03").value =
+          cfg.servico03Preco03 ?? 90;
+
+
+      } catch (e) {
+
+        toast(
+          "Erro ao carregar configurações: " + e.message,
+          "err"
+        );
+
+      }
     }
     async function salvarConfiguracoes() {
-      const whatsapp = document.getElementById("config-whatsapp").value.trim().replace(/\D/g, "");
-      const horaInicio = document.getElementById("config-hora-inicio").value;
-      const horaFim = document.getElementById("config-hora-fim").value;
-      const intervalo = parseInt(document.getElementById("config-intervalo").value, 10) || 60;
+
+      // =========================
+      // CONFIGURAÇÕES GERAIS
+      // =========================
+
+      const whatsapp =
+        document.getElementById("config-whatsapp")
+          .value
+          .trim()
+          .replace(/\D/g, "");
+
+      const horaInicio =
+        document.getElementById("config-hora-inicio").value;
+
+      const horaFim =
+        document.getElementById("config-hora-fim").value;
+
+      const intervalo =
+        parseInt(
+          document.getElementById("config-intervalo").value,
+          10
+        ) || 60;
+
       const retiradaDias = [];
-      for (let i = 0; i <= 6; i++)if (document.getElementById("config-dia-" + i).checked) retiradaDias.push(i);
-      if (!whatsapp) { toast("Informe o WhatsApp.", "err"); return }
-      if (!horaInicio || !horaFim || horaInicio >= horaFim) { toast("Verifique o horário inicial e final.", "err"); return }
-      if (!retiradaDias.length) { toast("Selecione ao menos um dia para retirada.", "err"); return }
+
+      for (let i = 0; i <= 6; i++) {
+
+        if (
+          document.getElementById("config-dia-" + i).checked
+        ) {
+          retiradaDias.push(i);
+        }
+
+      }
+
+
+      // =========================
+      // VALORES DOS SERVIÇOS
+      // =========================
+
+      const servico01Preco01 =
+        parseFloat(
+          document.getElementById("servico-01-preco-01").value
+        );
+
+      const servico01Preco02 =
+        parseFloat(
+          document.getElementById("servico-01-preco-02").value
+        );
+
+
+      const servico02Preco01 =
+        parseFloat(
+          document.getElementById("servico-02-preco-01").value
+        );
+
+      const servico02Preco02 =
+        parseFloat(
+          document.getElementById("servico-02-preco-02").value
+        );
+
+      const servico02Preco03 =
+        parseFloat(
+          document.getElementById("servico-02-preco-03").value
+        );
+
+
+      const servico03Preco01 =
+        parseFloat(
+          document.getElementById("servico-03-preco-01").value
+        );
+
+      const servico03Preco02 =
+        parseFloat(
+          document.getElementById("servico-03-preco-02").value
+        );
+
+      const servico03Preco03 =
+        parseFloat(
+          document.getElementById("servico-03-preco-03").value
+        );
+
+
+      // =========================
+      // VALIDAÇÕES
+      // =========================
+
+      if (!whatsapp) {
+
+        toast("Informe o WhatsApp.", "err");
+        return;
+
+      }
+
+      if (
+        !horaInicio ||
+        !horaFim ||
+        horaInicio >= horaFim
+      ) {
+
+        toast(
+          "Verifique o horário inicial e final.",
+          "err"
+        );
+
+        return;
+
+      }
+
+      if (!retiradaDias.length) {
+
+        toast(
+          "Selecione ao menos um dia para retirada.",
+          "err"
+        );
+
+        return;
+
+      }
+
+
+      const precos = [
+        servico01Preco01,
+        servico01Preco02,
+        servico02Preco01,
+        servico02Preco02,
+        servico02Preco03,
+        servico03Preco01,
+        servico03Preco02,
+        servico03Preco03
+      ];
+
+      if (precos.some(preco => Number.isNaN(preco) || preco < 0)) {
+
+        toast(
+          "Verifique os valores dos serviços.",
+          "err"
+        );
+
+        return;
+
+      }
+
+
+      // =========================
+      // SALVAR NO FIRESTORE
+      // =========================
+
       try {
-        await db.collection("configuracoes").doc("geral").set({
-          whatsapp, retiradaDias, retiradaHoraInicio: horaInicio, retiradaHoraFim: horaFim, retiradaIntervalo: intervalo
-        }, { merge: true });
-        toast("Configurações salvas!", "ok");
-      } catch (e) { toast("Erro: " + e.message, "err") }
+
+        await db
+          .collection("configuracoes")
+          .doc("geral")
+          .set({
+
+            // Configurações existentes
+            whatsapp,
+            retiradaDias,
+            retiradaHoraInicio: horaInicio,
+            retiradaHoraFim: horaFim,
+            retiradaIntervalo: intervalo,
+
+            // Serviços
+            servico01Preco01,
+            servico01Preco02,
+
+            servico02Preco01,
+            servico02Preco02,
+            servico02Preco03,
+
+            servico03Preco01,
+            servico03Preco02,
+            servico03Preco03
+
+          }, {
+            merge: true
+          });
+
+
+        toast(
+          "Configurações salvas!",
+          "ok"
+        );
+
+
+      } catch (e) {
+
+        toast(
+          "Erro: " + e.message,
+          "err"
+        );
+
+      }
     }
 
     function abrirModal(id) { document.getElementById(id).classList.add("show") }

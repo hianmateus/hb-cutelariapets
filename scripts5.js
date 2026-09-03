@@ -76,43 +76,247 @@ let CONFIG_RETIRADA = {
     intervalo: 60
 };
 
+// ============================================================
+// CARREGAR CONFIGURAÇÕES DA LOJA
+// ============================================================
+
 async function carregarConfiguracoesLoja() {
+
     try {
+
         const doc = await db
             .collection("configuracoes")
             .doc("geral")
             .get();
 
-        if (doc.exists) {
-            const config = doc.data();
 
-            if (config.whatsapp) {
-                NUMERO_WHATSAPP = String(config.whatsapp)
+        if (!doc.exists) {
+
+            console.warn(
+                "Configuração geral não encontrada no Firebase."
+            );
+
+            configurarBotoesWhatsApp();
+
+            return;
+        }
+
+
+        const config = doc.data();
+
+
+        // ====================================================
+        // WHATSAPP
+        // ====================================================
+
+        if (config.whatsapp) {
+
+            NUMERO_WHATSAPP =
+                String(config.whatsapp)
                     .replace(/\D/g, "");
-            }
+        }
+
+
+        // ====================================================
+        // CONFIGURAÇÃO DE RETIRADA
+        // ====================================================
+
+        /*
+         * Aceita a estrutura:
+         *
+         * retirada: {
+         *     dias: [...],
+         *     horaInicio: "08:00",
+         *     horaFim: "18:00",
+         *     intervalo: 60
+         * }
+         */
+
+        if (config.retirada) {
 
             CONFIG_RETIRADA = {
-                dias: Array.isArray(config.retiradaDias)
-                    ? config.retiradaDias
-                    : [0, 1, 2, 3, 4, 5, 6],
+
+                dias:
+                    Array.isArray(
+                        config.retirada.dias
+                    )
+                        ? config.retirada.dias
+                        : [0, 1, 2, 3, 4, 5, 6],
 
                 horaInicio:
-                    config.retiradaHoraInicio || "08:00",
+                    config.retirada.horaInicio ||
+                    "08:00",
 
                 horaFim:
-                    config.retiradaHoraFim || "18:00",
+                    config.retirada.horaFim ||
+                    "18:00",
 
                 intervalo:
-                    Number(config.retiradaIntervalo) || 60
+                    Number(
+                        config.retirada.intervalo
+                    ) || 60
             };
         }
 
+        /*
+         * Compatibilidade com a estrutura antiga:
+         *
+         * retiradaDias
+         * retiradaHoraInicio
+         * retiradaHoraFim
+         * retiradaIntervalo
+         */
+
+        else {
+
+            CONFIG_RETIRADA = {
+
+                dias:
+                    Array.isArray(
+                        config.retiradaDias
+                    )
+                        ? config.retiradaDias
+                        : [0, 1, 2, 3, 4, 5, 6],
+
+                horaInicio:
+                    config.retiradaHoraInicio ||
+                    "08:00",
+
+                horaFim:
+                    config.retiradaHoraFim ||
+                    "18:00",
+
+                intervalo:
+                    Number(
+                        config.retiradaIntervalo
+                    ) || 60
+            };
+        }
+
+
+        // ====================================================
+        // PREÇOS DOS SERVIÇOS
+        // ====================================================
+
+        const precosServicos = {
+
+            servico01Preco01:
+                config.servico01Preco01,
+
+            servico01Preco02:
+                config.servico01Preco02,
+
+            servico02Preco01:
+                config.servico02Preco01,
+
+            servico02Preco02:
+                config.servico02Preco02,
+
+            servico02Preco03:
+                config.servico02Preco03,
+
+            servico03Preco01:
+                config.servico03Preco01,
+
+            servico03Preco02:
+                config.servico03Preco02,
+
+            servico03Preco03:
+                config.servico03Preco03
+        };
+
+
+        // ====================================================
+        // ATUALIZAR PREÇOS NO HTML
+        // ====================================================
+
+        const atualizarPreco = (
+            id,
+            valor
+        ) => {
+
+            const elemento =
+                document.getElementById(id);
+
+
+            if (
+                elemento &&
+                valor != null
+            ) {
+
+                elemento.textContent =
+                    Number(valor).toLocaleString(
+                        "pt-BR",
+                        {
+                            style: "currency",
+                            currency: "BRL"
+                        }
+                    );
+            }
+        };
+
+
+        // Serviço 01
+
+        atualizarPreco(
+            "PriceService1",
+            precosServicos.servico01Preco01
+        );
+
+        atualizarPreco(
+            "PriceService2",
+            precosServicos.servico01Preco02
+        );
+
+
+        // Serviço 02
+
+        atualizarPreco(
+            "PriceService3",
+            precosServicos.servico02Preco01
+        );
+
+        atualizarPreco(
+            "PriceService4",
+            precosServicos.servico02Preco02
+        );
+
+        atualizarPreco(
+            "PriceService5",
+            precosServicos.servico02Preco03
+        );
+
+
+        // Serviço 03
+
+        atualizarPreco(
+            "PriceService6",
+            precosServicos.servico03Preco01
+        );
+
+        atualizarPreco(
+            "PriceService7",
+            precosServicos.servico03Preco02
+        );
+
+        atualizarPreco(
+            "PriceService8",
+            precosServicos.servico03Preco03
+        );
+
+
+        // ====================================================
+        // CONFIGURAR BOTÕES DO WHATSAPP
+        // ====================================================
+
         configurarBotoesWhatsApp();
 
-    } catch (e) {
+
+    } catch (error) {
+
         console.error(
             "Erro ao carregar configurações da loja:",
-            e
+            error
         );
 
         configurarBotoesWhatsApp();
@@ -444,54 +648,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     };
 
 
-    // ========================================================
-    // CARREGAR CONFIGURAÇÕES DO FIREBASE
-    // ========================================================
-
-    try {
-        const configSnap = await db
-            .collection("configuracoes")
-            .doc("geral")
-            .get();
-
-        if (configSnap.exists) {
-            const config = configSnap.data();
-
-            // WhatsApp
-            if (config.whatsapp) {
-                NUMERO_WHATSAPP = config.whatsapp;
-            }
-
-            // Horários de retirada
-            if (config.retirada) {
-                CONFIG_RETIRADA = {
-                    dias: Array.isArray(config.retirada.dias)
-                        ? config.retirada.dias
-                        : [],
-
-                    horaInicio:
-                        config.retirada.horaInicio ||
-                        "08:00",
-
-                    horaFim:
-                        config.retirada.horaFim ||
-                        "18:00",
-
-                    intervalo:
-                        Number(config.retirada.intervalo) ||
-                        60
-                };
-            }
-        }
-
-    } catch (e) {
-        console.error(
-            "Erro ao carregar configurações do Firebase:",
-            e
-        );
-    }
-
-
     await carregarConfiguracoesLoja();
     configurarRetirada();
 
@@ -577,7 +733,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     // ========================================================
     // ANIMAÇÃO DO PRODUTO PARA O CARRINHO
-    // ========================================================
+    // =============================================z===========
 
     const animacaoVoarParaCarrinho = (productCard) => {
 
@@ -2552,6 +2708,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     filtrarEMostrarProdutos();
 
     atualizarCarrinho();
+
 
     // ============================================================
     // HEADER FIXO AO ROLAR A PÁGINA
