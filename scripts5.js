@@ -648,8 +648,120 @@ document.addEventListener("DOMContentLoaded", async () => {
     };
 
 
+        // ========================================================
+    // SALVAR DADOS DO CLIENTE NO LOCALSTORAGE
+    // ========================================================
+
+    const STORAGE_CLIENTE = "cutelariaPets_cliente";
+
+    const salvarDadosCliente = () => {
+
+        const dados = {
+            nome: document.getElementById("delivery-name")?.value || "",
+            telefone: document.getElementById("delivery-phone")?.value || "",
+            cep: document.getElementById("delivery-cep")?.value || "",
+            endereco: document.getElementById("delivery-address")?.value || "",
+
+            nomeRetirada:
+                document.getElementById("pickup-name")?.value || "",
+
+            pagamento:
+                document.querySelector('input[name="payment"]:checked')?.value || "",
+
+            trocoPara:
+                document.getElementById("troco-para")?.value || ""
+        };
+
+        localStorage.setItem(
+            STORAGE_CLIENTE,
+            JSON.stringify(dados)
+        );
+    };
+
+
+
+    const carregarDadosCliente = () => {
+
+        const dadosSalvos =
+            localStorage.getItem(STORAGE_CLIENTE);
+
+        if (!dadosSalvos) return;
+
+        try {
+
+            const dados =
+                JSON.parse(dadosSalvos);
+
+            const deliveryName =
+                document.getElementById("delivery-name");
+
+            const deliveryPhone =
+                document.getElementById("delivery-phone");
+
+            const deliveryCep =
+                document.getElementById("delivery-cep");
+
+            const deliveryAddress =
+                document.getElementById("delivery-address");
+
+            const pickupName =
+                document.getElementById("pickup-name");
+
+            const trocoPara =
+                document.getElementById("troco-para");
+
+
+            if (deliveryName)
+                deliveryName.value = dados.nome || "";
+
+            if (deliveryPhone)
+                deliveryPhone.value = dados.telefone || "";
+
+            if (deliveryCep)
+                deliveryCep.value = dados.cep || "";
+
+            if (deliveryAddress)
+                deliveryAddress.value = dados.endereco || "";
+
+            if (pickupName)
+                pickupName.value = dados.nomeRetirada || "";
+
+            if (trocoPara)
+                trocoPara.value = dados.trocoPara || "";
+
+
+            if (dados.pagamento) {
+
+                const radio =
+                    document.querySelector(
+                        `input[name="payment"][value="${dados.pagamento}"]`
+                    );
+
+                if (radio) {
+
+                    radio.checked = true;
+
+                    radio.dispatchEvent(
+                        new Event("change")
+                    );
+                }
+            }
+
+        } catch (error) {
+
+            console.error(
+                "Erro ao carregar dados salvos:",
+                error
+            );
+
+        }
+    };
+
+
     await carregarConfiguracoesLoja();
     configurarRetirada();
+
+    carregarDadosCliente();
 
 
     // ========================================================
@@ -665,6 +777,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     let categoriaAtiva = "all";
 
     let termoBusca = "";
+
 
 
     // ========================================================
@@ -2644,6 +2757,8 @@ document.addEventListener("DOMContentLoaded", async () => {
                             .classList.add(
                                 "selected"
                             );
+
+                        salvarDadosCliente();
                     }
                 );
             }
@@ -2675,7 +2790,19 @@ document.addEventListener("DOMContentLoaded", async () => {
                             input.classList.remove(
                                 "error"
                             );
+
                         }
+
+                        salvarDadosCliente();
+                    }
+                );
+
+                input.addEventListener(
+                    "change",
+                    () => {
+
+                        salvarDadosCliente();
+
                     }
                 );
             }
