@@ -3,12 +3,12 @@
 // ============================================================
 
 const firebaseConfig = {
-    apiKey: "AIzaSyBJjLLf0xXnyT0lwE9WwYepaXGnnWprUpc",
-    authDomain: "hb-cutelariapets.firebaseapp.com",
-    projectId: "hb-cutelariapets",
-    storageBucket: "hb-cutelariapets.firebasestorage.app",
-    messagingSenderId: "692195779876",
-    appId: "1:692195779876:web:6e7cfe6a1a64f53bcf7fb1"
+    apiKey: "AIzaSyDL8GFIduURC2ET6DMgLrn1Ul0IMn1XN_4",
+    authDomain: "hb-cutelariapets-a5ebd.firebaseapp.com",
+    projectId: "hb-cutelariapets-a5ebd",
+    storageBucket: "hb-cutelariapets-a5ebd.firebasestorage.app",
+    messagingSenderId: "535836473174",
+    appId: "1:535836473174:web:59166d40e4af384b64c8f7"
 };
 
 firebase.initializeApp(firebaseConfig);
@@ -648,7 +648,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     };
 
 
-        // ========================================================
+    // ========================================================
     // SALVAR DADOS DO CLIENTE NO LOCALSTORAGE
     // ========================================================
 

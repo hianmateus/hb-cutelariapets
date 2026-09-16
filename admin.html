@@ -978,7 +978,7 @@
 ========================= */
 
     .comprovante-venda {
-      width: 380px;
+      width: 80%;
       max-width: 100%;
       margin: 0 auto;
       background: #fff;
@@ -1110,14 +1110,9 @@
       }
 
       #comprovante-impressao {
-        position: absolute;
-        left: 50%;
-        transform: translateX(-50%);
-        top: 0;
-        width: 80mm;
-        max-width: 80mm;
-        margin: 0;
-        padding: 8mm;
+        width: 100%;
+        min-height: 100vh;
+        padding: 15mm;
         box-sizing: border-box;
         background: #fff;
       }
@@ -1127,7 +1122,7 @@
       }
 
       @page {
-        size: 80mm auto;
+        size: A4 portrait;
         margin: 0;
       }
     }
@@ -1678,12 +1673,12 @@
 
   <script>
     const firebaseConfig = {
-      apiKey: "AIzaSyBJjLLf0XxnyT0lwE9WwYepaXGnnWprUpc",
-      authDomain: "hb-cutelariapets.firebaseapp.com",
-      projectId: "hb-cutelariapets",
-      storageBucket: "hb-cutelariapets.firebasestorage.app",
-      messagingSenderId: "692195779876",
-      appId: "1:692195779876:web:6e7cfe6a1a64f53bcf7fb1"
+      apiKey: "AIzaSyDL8GFIduURC2ET6DMgLrn1Ul0IMn1XN_4",
+      authDomain: "hb-cutelariapets-a5ebd.firebaseapp.com",
+      projectId: "hb-cutelariapets-a5ebd",
+      storageBucket: "hb-cutelariapets-a5ebd.firebasestorage.app",
+      messagingSenderId: "535836473174",
+      appId: "1:535836473174:web:59166d40e4af384b64c8f7"
     };
 
     firebase.initializeApp(firebaseConfig);
