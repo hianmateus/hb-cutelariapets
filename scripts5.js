@@ -927,13 +927,31 @@ document.addEventListener("DOMContentLoaded", async () => {
                 "modalProductImage"
             );
 
-        if (!imagem || !produtoModalAtual)
+        const thumbnails =
+            document.getElementById(
+                "modalProductThumbnails"
+            );
+
+
+        if (
+            !imagem ||
+            !produtoModalAtual
+        ) {
             return;
+        }
 
 
         const imagens =
-            produtoModalAtual.imagem || [];
+            Array.isArray(
+                produtoModalAtual.imagem
+            )
+                ? produtoModalAtual.imagem
+                : [];
 
+
+        // ========================================================
+        // NENHUMA IMAGEM
+        // ========================================================
 
         if (!imagens.length) {
 
@@ -942,24 +960,112 @@ document.addEventListener("DOMContentLoaded", async () => {
             imagem.alt =
                 produtoModalAtual.nome || "";
 
+
+            if (thumbnails) {
+                thumbnails.innerHTML = "";
+            }
+
             return;
         }
 
 
-        if (modalImagemAtual < 0)
+        // ========================================================
+        // GARANTIR ÍNDICE VÁLIDO
+        // ========================================================
+
+        if (modalImagemAtual < 0) {
+
             modalImagemAtual =
                 imagens.length - 1;
+        }
 
 
-        if (modalImagemAtual >= imagens.length)
+        if (
+            modalImagemAtual >=
+            imagens.length
+        ) {
+
             modalImagemAtual = 0;
+        }
 
+
+        // ========================================================
+        // ATUALIZAR IMAGEM PRINCIPAL
+        // ========================================================
 
         imagem.src =
             imagens[modalImagemAtual];
 
         imagem.alt =
             produtoModalAtual.nome || "";
+
+
+        // ========================================================
+        // ATUALIZAR MINIATURAS
+        // ========================================================
+
+        if (!thumbnails) {
+            return;
+        }
+
+
+        thumbnails.innerHTML =
+            imagens
+                .map(
+                    (imagemUrl, index) => {
+
+                        return `
+                        <button
+                            type="button"
+                            class="ProductGalleryThumbnail ${index === modalImagemAtual
+                                ? "active"
+                                : ""
+                            }"
+                            data-index="${index}"
+                            aria-label="Ver imagem ${index + 1}"
+                        >
+
+                            <img
+                                src="${imagemUrl}"
+                                alt="${produtoModalAtual.nome || ""} - imagem ${index + 1}"
+                            >
+
+                        </button>
+                    `;
+                    }
+                )
+                .join("");
+
+
+        // ========================================================
+        // CLIQUE NAS MINIATURAS
+        // ========================================================
+
+        thumbnails
+            .querySelectorAll(
+                ".ProductGalleryThumbnail"
+            )
+            .forEach(thumbnail => {
+
+                thumbnail.addEventListener(
+                    "click",
+                    () => {
+
+                        modalImagemAtual =
+                            Number(
+                                thumbnail.dataset.index
+                            );
+
+                        atualizarImagemModal();
+
+                        thumbnail.scrollIntoView({
+                            behavior: "smooth",
+                            block: "nearest",
+                            inline: "center"
+                        });
+                    }
+                );
+            });
     };
 
 

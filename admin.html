@@ -978,7 +978,7 @@
 ========================= */
 
     .comprovante-venda {
-      width: 80%;
+      width: 380px;
       max-width: 100%;
       margin: 0 auto;
       background: #fff;
@@ -1111,10 +1111,10 @@
 
       #comprovante-impressao {
         width: 100%;
-        min-height: 100vh;
-        padding: 15mm;
+        height: 60vh;
         box-sizing: border-box;
         background: #fff;
+        margin-top: 100px;
       }
 
       .comprovante-imprimir {
@@ -1745,6 +1745,48 @@
       return resultado.url;
     }
 
+    async function excluirImagensDoServidor(imagens) {
+
+      if (!Array.isArray(imagens) || imagens.length === 0) {
+        return;
+      }
+
+      const user = auth.currentUser;
+
+      if (!user) {
+        throw new Error("Usuário não autenticado.");
+      }
+
+      const token = await user.getIdToken();
+
+      const response = await fetch("./excluir-imagem.php", {
+        method: "POST",
+        headers: {
+          "Authorization": "Bearer " + token,
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          imagens: imagens
+        })
+      });
+
+      let resultado;
+
+      try {
+        resultado = await response.json();
+      } catch (e) {
+        throw new Error("Resposta inválida do servidor ao excluir imagens.");
+      }
+
+      if (!response.ok || !resultado.success) {
+        throw new Error(
+          resultado.error || "Erro ao excluir imagens do servidor."
+        );
+      }
+
+      return resultado;
+    }
+
     async function alterarStatusVenda(docId, novoStatus) {
 
       try {
@@ -2130,36 +2172,317 @@
       box.innerHTML = imgs.map(src => `<img class="image-thumb" src="${escapeHtml(src)}" onerror="this.style.opacity='.25'">`).join("");
     }
     async function salvarProduto() {
+
       const docId = document.getElementById("form-doc-id").value;
-      const id = Number(document.getElementById("form-id").value);
-      const nome = document.getElementById("form-nome").value.trim();
-      const marca = document.getElementById("form-marca").value.trim();
-      const categoria = document.getElementById("form-categoria").value;
-      const preco = parseFloat(document.getElementById("form-preco").value);
-      const preco10xRaw = document.getElementById("form-preco10x").value;
-      const preco10x = preco10xRaw === "" ? null : parseFloat(preco10xRaw);
-      const imagem = document.getElementById("form-imagem").value.split(/\r?\n/).map(x => x.trim()).filter(Boolean);
-      const descricao = document.getElementById("form-descricao").value.trim();
-      const descricaoLonga = document.getElementById("form-descricaoLonga").value.trim();
-      const especificacoes = document.getElementById("form-especificacoes").value.split(/\r?\n/).map(x => x.trim()).filter(Boolean);
-      const offer = document.getElementById("form-offer").checked;
-      const ativo = document.getElementById("form-ativo").checked;
-      const destaque = document.getElementById("form-destaque").checked;
 
-      if (!id || id < 1 || !nome || !categoria || Number.isNaN(preco)) { toast("Preencha ID, nome, categoria e preço.", "err"); return }
-      if (preco10x !== null && Number.isNaN(preco10x)) { toast("Preço 10x inválido.", "err"); return }
+      const id = Number(
+        document.getElementById("form-id").value
+      );
 
-      const outro = todosProdutos.find(p => Number(p.id) === id && p.docId !== docId);
-      if (outro) { toast("Já existe um produto com esse ID.", "err"); return }
+      const nome = document
+        .getElementById("form-nome")
+        .value
+        .trim();
 
-      const dados = { id, nome, marca, categoria, preco, preco10x, offer, descricao, descricaoLonga, imagem, especificacoes, ativo, destaque };
+      const marca = document
+        .getElementById("form-marca")
+        .value
+        .trim();
+
+      const categoria =
+        document.getElementById("form-categoria").value;
+
+      const preco = parseFloat(
+        document.getElementById("form-preco").value
+      );
+
+      const preco10xRaw =
+        document.getElementById("form-preco10x").value;
+
+      const preco10x =
+        preco10xRaw === ""
+          ? null
+          : parseFloat(preco10xRaw);
+
+      const imagem =
+        document
+          .getElementById("form-imagem")
+          .value
+          .split(/\r?\n/)
+          .map(x => x.trim())
+          .filter(Boolean);
+
+      const descricao =
+        document
+          .getElementById("form-descricao")
+          .value
+          .trim();
+
+      const descricaoLonga =
+        document
+          .getElementById("form-descricaoLonga")
+          .value
+          .trim();
+
+      const especificacoes =
+        document
+          .getElementById("form-especificacoes")
+          .value
+          .split(/\r?\n/)
+          .map(x => x.trim())
+          .filter(Boolean);
+
+      const offer =
+        document.getElementById("form-offer").checked;
+
+      const ativo =
+        document.getElementById("form-ativo").checked;
+
+      const destaque =
+        document.getElementById("form-destaque").checked;
+
+
+      /*
+      |--------------------------------------------------------------------------
+      | Validações
+      |--------------------------------------------------------------------------
+      */
+
+      if (
+        !id ||
+        id < 1 ||
+        !nome ||
+        !categoria ||
+        Number.isNaN(preco)
+      ) {
+        toast(
+          "Preencha ID, nome, categoria e preço.",
+          "err"
+        );
+        return;
+      }
+
+      if (
+        preco10x !== null &&
+        Number.isNaN(preco10x)
+      ) {
+        toast(
+          "Preço 10x inválido.",
+          "err"
+        );
+        return;
+      }
+
+
+      /*
+      |--------------------------------------------------------------------------
+      | Verifica ID duplicado
+      |--------------------------------------------------------------------------
+      */
+
+      const outro = todosProdutos.find(
+        p =>
+          Number(p.id) === id &&
+          p.docId !== docId
+      );
+
+      if (outro) {
+        toast(
+          "Já existe um produto com esse ID.",
+          "err"
+        );
+        return;
+      }
+
+
+      /*
+      |--------------------------------------------------------------------------
+      | Se estiver editando, descobre as imagens antigas
+      |--------------------------------------------------------------------------
+      */
+
+      let imagensAntigas = [];
+
+      if (docId) {
+
+        const produtoAtual =
+          todosProdutos.find(
+            p => p.docId === docId
+          );
+
+        if (produtoAtual) {
+          imagensAntigas =
+            normalizarImagens(produtoAtual);
+        }
+      }
+
+
+      /*
+      |--------------------------------------------------------------------------
+      | Descobre quais imagens foram removidas
+      |--------------------------------------------------------------------------
+      */
+
+      const imagensRemovidas =
+        imagensAntigas.filter(
+          imagemAntiga =>
+            !imagem.includes(imagemAntiga)
+        );
+
+
+      /*
+      |--------------------------------------------------------------------------
+      | Dados do produto
+      |--------------------------------------------------------------------------
+      */
+
+      const dados = {
+        id,
+        nome,
+        marca,
+        categoria,
+        preco,
+        preco10x,
+        offer,
+        descricao,
+        descricaoLonga,
+        imagem,
+        especificacoes,
+        ativo,
+        destaque
+      };
+
+
       try {
-        if (docId) await db.collection("produtos").doc(docId).update(dados);
-        else await db.collection("produtos").doc(String(id)).set({ ...dados, criadoEm: firebase.firestore.FieldValue.serverTimestamp() });
-        toast(docId ? "Produto atualizado!" : "Produto criado!", "ok");
+
+        /*
+        |--------------------------------------------------------------------------
+        | Salva primeiro o produto no Firestore
+        |--------------------------------------------------------------------------
+        */
+
+        if (docId) {
+
+          await db
+            .collection("produtos")
+            .doc(docId)
+            .update(dados);
+
+        } else {
+
+          await db
+            .collection("produtos")
+            .doc(String(id))
+            .set({
+              ...dados,
+              criadoEm:
+                firebase.firestore.FieldValue
+                  .serverTimestamp()
+            });
+        }
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | Se imagens antigas foram removidas,
+        | verifica se ainda estão sendo usadas por outros produtos
+        |--------------------------------------------------------------------------
+        */
+
+        if (
+          docId &&
+          imagensRemovidas.length > 0
+        ) {
+
+          const imagensEmUsoPorOutros =
+            new Set();
+
+          todosProdutos.forEach(produto => {
+
+            if (produto.docId === docId) {
+              return;
+            }
+
+            const imagens =
+              normalizarImagens(produto);
+
+            imagens.forEach(imagem => {
+              imagensEmUsoPorOutros.add(imagem);
+            });
+
+          });
+
+
+          const imagensParaExcluir =
+            imagensRemovidas.filter(
+              imagem =>
+                !imagensEmUsoPorOutros.has(imagem)
+            );
+
+
+          /*
+          |--------------------------------------------------------------------------
+          | Apaga fisicamente somente as imagens
+          | que não estão mais sendo utilizadas
+          |--------------------------------------------------------------------------
+          */
+
+          if (imagensParaExcluir.length > 0) {
+
+            try {
+
+              await excluirImagensDoServidor(
+                imagensParaExcluir
+              );
+
+            } catch (erroImagem) {
+
+              /*
+              | O produto já foi salvo.
+              | Se a exclusão física falhar,
+              | não desfazemos a alteração do produto.
+              |
+              | Apenas avisamos.
+              */
+
+              console.error(
+                "Erro ao excluir imagens antigas:",
+                erroImagem
+              );
+
+              toast(
+                "Produto salvo, mas algumas imagens antigas não puderam ser excluídas.",
+                "err"
+              );
+            }
+          }
+        }
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | Finalização
+        |--------------------------------------------------------------------------
+        */
+
+        toast(
+          docId
+            ? "Produto atualizado!"
+            : "Produto criado!",
+          "ok"
+        );
+
         fecharModal("modal-produto");
+
         await carregarProdutos();
-      } catch (e) { toast("Erro: " + e.message, "err") }
+
+      } catch (e) {
+
+        toast(
+          "Erro: " + e.message,
+          "err"
+        );
+      }
     }
 
     async function carregarCategorias() {
@@ -2260,16 +2583,171 @@
     }
 
     async function confirmarExclusao(tipo, docId, nome) {
-      document.getElementById("confirm-msg").textContent = `Excluir "${nome}"? Esta ação não pode ser desfeita.`;
-      document.getElementById("confirm-ok-btn").onclick = async () => {
-        try {
-          if (tipo === "produto") await db.collection("produtos").doc(docId).delete();
-          else if (tipo === "categoria") await db.collection("categorias").doc(docId).delete();
-          else if (tipo === "cupom") await db.collection("cupons").doc(docId).delete();
-          toast("Excluído com sucesso!", "ok"); fecharModal("confirm-modal");
-          await Promise.all([carregarProdutos(), carregarCategorias(), carregarCupons()]);
-        } catch (e) { toast("Erro: " + e.message, "err") }
-      };
+
+      document.getElementById("confirm-msg").textContent =
+        `Excluir "${nome}"? Esta ação não pode ser desfeita.`;
+
+      document.getElementById("confirm-ok-btn").onclick =
+        async () => {
+
+          try {
+
+            /*
+            |--------------------------------------------------------------------------
+            | PRODUTO
+            |--------------------------------------------------------------------------
+            */
+
+            if (tipo === "produto") {
+
+              const produto =
+                todosProdutos.find(
+                  p => p.docId === docId
+                );
+
+              const imagensDoProduto =
+                produto
+                  ? normalizarImagens(produto)
+                  : [];
+
+
+              /*
+              |--------------------------------------------------------------------------
+              | Descobre imagens que ainda estão sendo usadas
+              | por outros produtos
+              |--------------------------------------------------------------------------
+              */
+
+              const imagensEmUsoPorOutros =
+                new Set();
+
+              todosProdutos.forEach(outroProduto => {
+
+                if (outroProduto.docId === docId) {
+                  return;
+                }
+
+                const imagens =
+                  normalizarImagens(outroProduto);
+
+                imagens.forEach(imagem => {
+                  imagensEmUsoPorOutros.add(imagem);
+                });
+
+              });
+
+
+              /*
+              |--------------------------------------------------------------------------
+              | Somente estas imagens podem ser apagadas
+              |--------------------------------------------------------------------------
+              */
+
+              const imagensParaExcluir =
+                imagensDoProduto.filter(
+                  imagem =>
+                    !imagensEmUsoPorOutros.has(imagem)
+                );
+
+
+              /*
+              |--------------------------------------------------------------------------
+              | Primeiro exclui o produto do Firestore
+              |--------------------------------------------------------------------------
+              */
+
+              await db
+                .collection("produtos")
+                .doc(docId)
+                .delete();
+
+
+              /*
+              |--------------------------------------------------------------------------
+              | Depois tenta excluir as imagens físicas
+              |--------------------------------------------------------------------------
+              */
+
+              if (imagensParaExcluir.length > 0) {
+
+                try {
+
+                  await excluirImagensDoServidor(
+                    imagensParaExcluir
+                  );
+
+                } catch (erroImagem) {
+
+                  console.error(
+                    "Erro ao excluir imagens do produto:",
+                    erroImagem
+                  );
+
+                  toast(
+                    "Produto excluído, mas algumas imagens não puderam ser excluídas.",
+                    "err"
+                  );
+                }
+              }
+
+
+              /*
+              |--------------------------------------------------------------------------
+              | CATEGORIA
+              |--------------------------------------------------------------------------
+              */
+
+            } else if (tipo === "categoria") {
+
+              await db
+                .collection("categorias")
+                .doc(docId)
+                .delete();
+
+
+              /*
+              |--------------------------------------------------------------------------
+              | CUPOM
+              |--------------------------------------------------------------------------
+              */
+
+            } else if (tipo === "cupom") {
+
+              await db
+                .collection("cupons")
+                .doc(docId)
+                .delete();
+            }
+
+
+            /*
+            |--------------------------------------------------------------------------
+            | Atualiza interface
+            |--------------------------------------------------------------------------
+            */
+
+            toast(
+              "Excluído com sucesso!",
+              "ok"
+            );
+
+            fecharModal("confirm-modal");
+
+            await Promise.all([
+              carregarProdutos(),
+              carregarCategorias(),
+              carregarCupons()
+            ]);
+
+          } catch (e) {
+
+            toast(
+              "Erro: " + e.message,
+              "err"
+            );
+          }
+        };
+
       abrirModal("confirm-modal");
     }
 

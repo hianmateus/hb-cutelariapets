@@ -8,7 +8,7 @@ header('Content-Type: application/json; charset=utf-8');
 |--------------------------------------------------------------------------
 */
 
-$firebaseApiKey = "AIzaSyBJjLLf0XxnyT0lwE9WwYepaXGnnWprUpc";
+$firebaseApiKey = "AIzaSyDL8GFIduURC2ET6DMgLrn1Ul0IMn1XN_4";
 
 $uploadDir = __DIR__ . "/imgs/Products/";
 $publicDir = "./imgs/Products/";

@@ -61,16 +61,26 @@
 
                 <!-- lado direito -->
                 <div class="ProductModalGallery">
+
                     <button class="ProductGalleryArrow left" type="button" onclick="prevModalImage()">
                         &#10094;
                     </button>
 
+
                     <div class="produto-imagem">
                         <img class="ProductImagePlaceholder" id="modalProductImage" src="" alt="">
                     </div>
+
+
                     <button class="ProductGalleryArrow right" type="button" onclick="nextModalImage()">
                         &#10095;
                     </button>
+
+
+                    <!-- MINIATURAS DAS IMAGENS -->
+
+                    <div class="ProductGalleryThumbnails" id="modalProductThumbnails"></div>
+
                 </div>
 
             </div>
@@ -165,7 +175,7 @@
                 <div class="form-group"><label for="delivery-cep">CEP</label><input type="text" id="delivery-cep"
                         placeholder="00000-000" maxlength="9" required></div>
                 <div class="form-group"><label for="delivery-address">Endereço</label><textarea id="delivery-address"
-                        placeholder="Bairro, Rua, Numero, Referencia" required></textarea>
+                        placeholder="Lote, Quadra, Numero" required></textarea>
                 </div>
                 <div class="delivery-fee-notice">A taxa de entrega será calculada de acordo com a sua região.</div>
 
