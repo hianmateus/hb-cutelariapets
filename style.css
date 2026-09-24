@@ -32,6 +32,89 @@
 
 
  /* ============================================================
+   CARROSSÉIS DE CATEGORIAS
+   ============================================================ */
+
+ .category-carousels {
+     width: 90%;
+     margin-top: 60px;
+ }
+
+
+ .category-carousel {
+     width: 100%;
+     margin-bottom: 55px;
+ }
+
+
+ .category-carousel-header {
+     display: flex;
+     align-items: center;
+     justify-content: space-between;
+
+     margin-bottom: 20px;
+ }
+
+
+ .category-carousel-header h2 {
+     margin: 0;
+
+     font-size: 1.7rem;
+     font-weight: 700;
+ }
+
+
+ .category-carousel-track {
+     display: flex;
+     gap: 20px;
+     overflow-x: auto;
+     overflow-y: hidden;
+     padding: 5px 4px 50px;
+     scroll-behavior: smooth;
+     scrollbar-width: thin;
+ }
+
+
+ /* Chrome / Edge / Safari */
+
+ .category-carousel-track::-webkit-scrollbar {
+     height: 6px;
+ }
+
+
+ .category-carousel-track::-webkit-scrollbar-track {
+     background: transparent;
+ }
+
+
+ .category-carousel-track::-webkit-scrollbar-thumb {
+     border-radius: 20px;
+ }
+
+
+ /*
+ * Os cards continuam utilizando
+ * o mesmo .product-card dos produtos normais.
+ *
+ * Aqui apenas impedimos que eles encolham
+ * dentro do carrossel.
+ */
+
+ .category-carousel-track .product-card {
+
+     flex: 0 0 280px;
+
+     width: 280px;
+ }
+
+ .ProductsCarousels{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+ }
+
+
+ /* ============================================================
    GALERIA DE MINIATURAS DO MODAL
    ============================================================ */
 
@@ -933,6 +1016,8 @@
 
  .product-info {
      padding: 1rem;
+     position: relative;
+
  }
 
  .product-name {
@@ -946,6 +1031,9 @@
      font-size: 0.9rem;
      margin-bottom: 1rem;
      color: #6c757d;
+ }
+
+ .bottomtexts{
  }
 
  .product-price {

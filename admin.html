@@ -978,7 +978,7 @@
 ========================= */
 
     .comprovante-venda {
-      width: 380px;
+      width: 90%;
       max-width: 100%;
       margin: 0 auto;
       background: #fff;
@@ -1599,6 +1599,13 @@
         </div>
         <div class="form-group full"><label>Ícone Font Awesome</label><input type="text" id="cat-icone"
             placeholder="fa-tag"></div>
+
+        <div class="form-group full">
+          <label class="toggle-row">
+            <input type="checkbox" id="cat-carrossel">
+            Exibir produtos desta categoria em um carrossel no site
+          </label>
+        </div>
       </div>
       <div class="modal-footer"><button class="btn btn-ghost"
           onclick="fecharModal('modal-categoria')">Cancelar</button><button class="btn btn-primary"
@@ -2505,14 +2512,20 @@
       document.getElementById("cat-nome").value = "";
       document.getElementById("cat-id").value = "";
       document.getElementById("cat-icone").value = "";
+      document.getElementById("cat-carrossel").checked = false;
+
       abrirModal("modal-categoria");
     }
     function abrirModalCategoriaEditar(docId) {
-      const c = todasCategorias.find(x => x.docId === docId); if (!c) return;
+      const c = todasCategorias.find(x => x.docId === docId);
+      if (!c) return;
+
       document.getElementById("cat-id-original").value = docId;
       document.getElementById("cat-nome").value = c.nome || "";
       document.getElementById("cat-id").value = c.id || c.docId || "";
       document.getElementById("cat-icone").value = c.icone || "";
+      document.getElementById("cat-carrossel").checked = c.carrossel === true;
+
       abrirModal("modal-categoria");
     }
     async function salvarCategoria() {
@@ -2520,13 +2533,38 @@
       const nome = document.getElementById("cat-nome").value.trim();
       const id = document.getElementById("cat-id").value.trim().replace(/\s+/g, "");
       const icone = document.getElementById("cat-icone").value.trim() || "fa-tag";
-      if (!nome || !id) { toast("Preencha nome e ID.", "err"); return }
+      const carrossel = document.getElementById("cat-carrossel").checked;
+
+      if (!nome || !id) {
+        toast("Preencha nome e ID.", "err");
+        return;
+      }
+
       try {
-        if (original) await db.collection("categorias").doc(original).update({ nome, id, icone });
-        else await db.collection("categorias").doc(id).set({ nome, id, icone });
-        toast("Categoria salva!", "ok"); fecharModal("modal-categoria");
+        if (original) {
+          await db.collection("categorias").doc(original).update({
+            nome,
+            id,
+            icone,
+            carrossel
+          });
+        } else {
+          await db.collection("categorias").doc(id).set({
+            nome,
+            id,
+            icone,
+            carrossel
+          });
+        }
+
+        toast("Categoria salva!", "ok");
+        fecharModal("modal-categoria");
+
         await carregarCategorias();
-      } catch (e) { toast("Erro: " + e.message, "err") }
+
+      } catch (e) {
+        toast("Erro: " + e.message, "err");
+      }
     }
 
     async function carregarCupons() {

@@ -420,6 +420,9 @@ document.addEventListener("DOMContentLoaded", async () => {
     const productsContainer =
         document.querySelector(".products-container");
 
+    const categoryCarousels =
+        document.getElementById("categoryCarousels");
+
 
     // ========================================================
     // CARREGAR PRODUTOS DO FIREBASE
@@ -1380,6 +1383,73 @@ document.addEventListener("DOMContentLoaded", async () => {
 
 
     // ========================================================
+    // GERAR CARD DE PRODUTO
+    // ========================================================
+
+    const gerarCardProduto = (p) => {
+
+        const imagemPrincipal =
+            p.imagem?.[0] || "";
+
+        const emOferta =
+            p.offer === true;
+
+        const ofertaHTML = emOferta
+            ? `
+            <span class="product-offer">
+                EM OFERTA
+            </span>
+        `
+            : "";
+
+        return `
+        <div
+            class="product-card ${emOferta ? "has-offer" : ""}"
+            data-id="${p.id}"
+        >
+
+            <div class="product-image-container">
+
+                ${ofertaHTML}
+
+                <img
+                    class="product-img"
+                    src="${imagemPrincipal}"
+                    alt="${p.nome}"
+                >
+
+            </div>
+
+            <div class="product-info">
+
+                <h3 class="product-name">
+                    ${p.nome}
+                </h3>
+
+                <p class="product-description">
+                    ${p.descricao || ""}
+                </p>
+
+                <div class="bottomtexts">
+                <p class="product-price ${emOferta ? "product-price-offer" : ""}">
+                    ${formatarMoeda(p.preco)}
+                </p>
+
+                <button
+                    class="product-button"
+                >
+                    Comprar
+                </button>
+                </div>
+
+            </div>
+
+        </div>
+    `;
+    };
+
+
+    // ========================================================
     // FILTRAR E MOSTRAR PRODUTOS
     // ========================================================
 
@@ -1567,6 +1637,209 @@ document.addEventListener("DOMContentLoaded", async () => {
                 })
                 .join("");
     };
+
+
+    // ========================================================
+    // CARREGAR CARROSSÉIS DE CATEGORIAS
+    // ========================================================
+
+    const carregarCarrosseisCategorias = async () => {
+
+        if (!categoryCarousels)
+            return;
+
+        try {
+
+            const snap =
+                await db
+                    .collection("categorias")
+                    .get();
+
+
+            const categorias =
+                snap.docs
+                    .map(doc => ({
+                        docId: doc.id,
+                        ...doc.data()
+                    }))
+                    .filter(categoria =>
+                        categoria.carrossel === true
+                    );
+
+
+            categoryCarousels.innerHTML = "";
+
+
+            if (!categorias.length)
+                return;
+
+
+            categorias.forEach(categoria => {
+
+                /*
+                 * Aceita as seguintes possibilidades:
+                 *
+                 * produto.categoria = "laminas"
+                 * produto.categoria = ID do documento
+                 * produto.categoria = "Lâminas"
+                 */
+
+                const produtosCategoria =
+                    produtos.filter(produto => {
+
+                        const categoriaProduto =
+                            String(
+                                produto.categoria || ""
+                            )
+                                .trim()
+                                .toLowerCase();
+
+
+                        const idsCategoria = [
+                            categoria.id,
+                            categoria.docId,
+                            categoria.nome
+                        ]
+                            .filter(Boolean)
+                            .map(valor =>
+                                String(valor)
+                                    .trim()
+                                    .toLowerCase()
+                            );
+
+
+                        return idsCategoria.includes(
+                            categoriaProduto
+                        );
+
+                    });
+
+
+                /*
+                 * Não criar carrossel vazio
+                 */
+
+                if (!produtosCategoria.length)
+                    return;
+
+
+                const section =
+                    document.createElement("section");
+
+
+                section.className =
+                    "category-carousel";
+
+
+                section.dataset.category =
+                    categoria.id ||
+                    categoria.docId;
+
+
+                section.innerHTML = `
+
+                <div class="category-carousel-header">
+
+                    <h2>
+                        ${categoria.nome || ""}
+                    </h2>
+
+                </div>
+
+
+                <div class="category-carousel-track">
+
+                    ${produtosCategoria
+                        .map(gerarCardProduto)
+                        .join("")}
+
+                </div>
+
+            `;
+
+
+                categoryCarousels.appendChild(
+                    section
+                );
+
+            });
+
+
+        } catch (error) {
+
+            console.error(
+                "Erro ao carregar carrosséis das categorias:",
+                error
+            );
+
+            categoryCarousels.innerHTML = "";
+
+        }
+
+    };
+
+
+    // ========================================================
+    // ARRASTAR CARROSSÉIS COM O MOUSE
+    // ========================================================
+
+    document.addEventListener("mousedown", event => {
+
+        const track = event.target.closest(
+            ".category-carousel-track"
+        );
+
+        if (!track)
+            return;
+
+        track.classList.add("is-dragging");
+
+        track.dataset.dragStartX = event.pageX;
+        track.dataset.scrollStart = track.scrollLeft;
+    });
+
+
+    document.addEventListener("mousemove", event => {
+
+        const track = document.querySelector(
+            ".category-carousel-track.is-dragging"
+        );
+
+        if (!track)
+            return;
+
+        event.preventDefault();
+
+        const startX =
+            Number(track.dataset.dragStartX);
+
+        const startScroll =
+            Number(track.dataset.scrollStart);
+
+        const distancia =
+            event.pageX - startX;
+
+        track.scrollLeft =
+            startScroll - distancia;
+    });
+
+
+    document.addEventListener("mouseup", () => {
+
+        const track = document.querySelector(
+            ".category-carousel-track.is-dragging"
+        );
+
+        if (!track)
+            return;
+
+        track.classList.remove(
+            "is-dragging"
+        );
+
+        delete track.dataset.dragStartX;
+        delete track.dataset.scrollStart;
+    });
 
 
     // ========================================================
@@ -2658,10 +2931,11 @@ document.addEventListener("DOMContentLoaded", async () => {
 
 
     // ========================================================
-    // CLIQUES NOS PRODUTOS
+    // CLIQUE NOS CARDS DE PRODUTOS
+    // FUNCIONA NOS PRODUTOS NORMAIS E NOS CARROSSÉIS
     // ========================================================
 
-    productsContainer.addEventListener(
+    document.addEventListener(
         "click",
         event => {
 
@@ -2669,7 +2943,6 @@ document.addEventListener("DOMContentLoaded", async () => {
                 event.target.closest(
                     ".product-card"
                 );
-
 
             if (!productCard)
                 return;
@@ -2679,6 +2952,11 @@ document.addEventListener("DOMContentLoaded", async () => {
                 Number(
                     productCard.dataset.id
                 );
+
+            if (
+                !produtoId
+            )
+                return;
 
 
             // ------------------------------------------------
@@ -2939,6 +3217,8 @@ document.addEventListener("DOMContentLoaded", async () => {
     // ========================================================
 
     filtrarEMostrarProdutos();
+
+    await carregarCarrosseisCategorias();
 
     atualizarCarrinho();
 
