@@ -1094,7 +1094,8 @@ document.addEventListener("DOMContentLoaded", async () => {
     };
 
 
-    const abrirModalProduto = (produtoId) => {
+    const abrirModalProduto = (produtoId,
+        atualizarUrl = true) => {
 
         const produto =
             produtos.find(
@@ -1110,6 +1111,30 @@ document.addEventListener("DOMContentLoaded", async () => {
             );
 
             return;
+        }
+
+
+        // ========================================================
+        // ATUALIZAR URL DO PRODUTO
+        // ========================================================
+
+        if (atualizarUrl) {
+
+            const url =
+                new URL(
+                    window.location.href
+                );
+
+            url.searchParams.set(
+                "produto",
+                produto.id
+            );
+
+            window.history.replaceState(
+                {},
+                "",
+                url
+            );
         }
 
 
@@ -1267,6 +1292,22 @@ document.addEventListener("DOMContentLoaded", async () => {
 
 
     const fecharModalProduto = () => {
+
+        // Remove o produto da URL
+        const url =
+            new URL(
+                window.location.href
+            );
+
+        url.searchParams.delete(
+            "produto"
+        );
+
+        window.history.replaceState(
+            {},
+            "",
+            url
+        );
 
         const modal =
             document.getElementById(
@@ -1914,6 +1955,102 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     };
 
+    // ========================================================
+    // COMPARTILHAR PRODUTO
+    // ========================================================
+
+    const compartilharProduto = async () => {
+
+        if (!produtoModalAtual)
+            return;
+
+
+        const url =
+            new URL(
+                window.location.href
+            );
+
+
+        url.searchParams.set(
+            "produto",
+            produtoModalAtual.id
+        );
+
+
+        const linkProduto =
+            url.toString();
+
+
+        // ----------------------------------------------------
+        // COMPARTILHAMENTO NATIVO
+        // ----------------------------------------------------
+
+        if (
+            navigator.share
+        ) {
+
+            try {
+
+                await navigator.share({
+                    title:
+                        produtoModalAtual.nome ||
+                        "Produto",
+                    text:
+                        `Confira este produto: ${produtoModalAtual.nome || ""}`,
+                    url:
+                        linkProduto
+                });
+
+                return;
+
+            } catch (error) {
+
+                // Usuário cancelou o compartilhamento
+                if (
+                    error.name ===
+                    "AbortError"
+                ) {
+                    return;
+                }
+
+                console.error(
+                    "Erro ao compartilhar:",
+                    error
+                );
+            }
+        }
+
+
+        // ----------------------------------------------------
+        // FALLBACK: COPIAR LINK
+        // ----------------------------------------------------
+
+        try {
+
+            await navigator.clipboard.writeText(
+                linkProduto
+            );
+
+
+            toast(
+                "Link do produto copiado!",
+                "success"
+            );
+
+        } catch (error) {
+
+            console.error(
+                "Erro ao copiar link:",
+                error
+            );
+
+            toast(
+                "Não foi possível copiar o link.",
+                "err"
+            );
+        }
+    };
+
 
     const modalBuyBtn =
         document.getElementById(
@@ -1927,6 +2064,20 @@ document.addEventListener("DOMContentLoaded", async () => {
             "click",
             comprarProdutoModal
         );
+    }
+
+    const modalShareBtn =
+        document.getElementById(
+            "modalShareBtn"
+        );
+
+    if (modalShareBtn) {
+
+        modalShareBtn.addEventListener(
+            "click",
+            compartilharProduto
+        );
+
     }
 
 
@@ -3219,6 +3370,26 @@ document.addEventListener("DOMContentLoaded", async () => {
     filtrarEMostrarProdutos();
 
     await carregarCarrosseisCategorias();
+
+    // ========================================================
+    // ABRIR PRODUTO ATRAVÉS DO LINK
+    // ========================================================
+
+    const parametros =
+        new URLSearchParams(
+            window.location.search
+        );
+
+    const produtoIdUrl =
+        parametros.get("produto");
+
+    if (produtoIdUrl) {
+
+        abrirModalProduto(
+            produtoIdUrl,
+            false
+        );
+    }
 
     atualizarCarrinho();
 

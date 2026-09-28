@@ -31,6 +31,59 @@
  }
 
 
+ /* ========================================================
+   BOTÃO COMPARTILHAR PRODUTO
+   ======================================================== */
+
+ .ProductModalShareBtn {
+     width: 100%;
+     margin-top: 10px;
+
+     display: flex;
+     align-items: center;
+     justify-content: center;
+     gap: 8px;
+
+     padding: 13px 20px;
+
+     border: 1px solid #d8d8d8;
+     border-radius: 8px;
+
+     background: transparent;
+     color: #222;
+
+     font-family: inherit;
+     font-size: 14px;
+     font-weight: 600;
+
+     cursor: pointer;
+
+     transition:
+         background 0.2s ease,
+         color 0.2s ease,
+         border-color 0.2s ease,
+         transform 0.2s ease;
+
+     position: absolute;
+     top: 5px;
+     left: 13px;
+     width: 4%;
+ }
+
+ .ProductModalShareBtn:hover {
+     background: #f5f5f5;
+     border-color: #bbb;
+ }
+
+ .ProductModalShareBtn:active {
+     transform: scale(0.98);
+ }
+
+ .ProductModalShareBtn i {
+     font-size: 14px;
+ }
+
+
  /* ============================================================
    CARROSSÉIS DE CATEGORIAS
    ============================================================ */
@@ -107,10 +160,10 @@
      width: 280px;
  }
 
- .ProductsCarousels{
-    display: flex;
-    align-items: center;
-    justify-content: center;
+ .ProductsCarousels {
+     display: flex;
+     align-items: center;
+     justify-content: center;
  }
 
 
@@ -340,6 +393,7 @@
      display: grid;
      grid-template-columns: 1fr 1fr;
      min-height: 620px;
+     position: relative;
  }
 
  /* LADO ESQUERDO */
@@ -1033,8 +1087,7 @@
      color: #6c757d;
  }
 
- .bottomtexts{
- }
+ .bottomtexts {}
 
  .product-price {
      font-size: 1.4rem;
