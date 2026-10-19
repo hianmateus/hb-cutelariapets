@@ -6,8 +6,93 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Admin – Cutelaria Pets</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.2/cropper.min.css">
   <link rel="icon" href="./img/DevIcon.png" type="image/png">
   <style>
+
+    /* =========================
+       RECORTE DE IMAGENS
+    ========================= */
+    #cropper-modal {
+      z-index: 500;
+      padding: 16px;
+    }
+
+    #cropper-modal .cropper-dialog {
+      width: min(760px, 100%);
+      max-width: 760px;
+      max-height: calc(100vh - 32px);
+      overflow-y: auto;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 22px;
+    }
+
+    #cropper-modal h2 {
+      color: var(--gold);
+      font-size: 1.1rem;
+      margin-bottom: 8px;
+    }
+
+    #cropper-modal .cropper-help {
+      color: var(--muted);
+      font-size: .82rem;
+      line-height: 1.5;
+      margin-bottom: 14px;
+    }
+
+    #cropper-image-stage {
+      width: 100%;
+      height: min(58vh, 480px);
+      min-height: 220px;
+      background: #101010;
+      overflow: hidden;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+    }
+
+    #cropper-image {
+      display: block;
+      max-width: 100%;
+    }
+
+    #cropper-modal .cropper-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
+      margin-top: 16px;
+    }
+
+    #cropper-modal .cropper-actions .btn {
+      justify-content: center;
+    }
+
+    @media (max-width: 600px) {
+      #cropper-modal {
+        padding: 8px;
+        align-items: center;
+      }
+
+      #cropper-modal .cropper-dialog {
+        padding: 16px 12px;
+        max-height: calc(100dvh - 16px);
+      }
+
+      #cropper-image-stage {
+        height: min(50vh, 360px);
+        min-height: 200px;
+      }
+
+      #cropper-modal .cropper-actions {
+        flex-direction: column-reverse;
+      }
+
+      #cropper-modal .cropper-actions .btn {
+        width: 100%;
+      }
+    }
+
     .LinktoSite {
       color: white;
       text-align: center;
@@ -2125,11 +2210,40 @@
     </div>
   </div>
 
+  <!-- MODAL DE RECORTE DE IMAGEM -->
+  <div class="modal-overlay" id="cropper-modal" aria-hidden="true">
+    <div class="cropper-dialog" role="dialog" aria-modal="true" aria-labelledby="cropper-title">
+      <h2 id="cropper-title"><i class="fa-solid fa-crop-simple"></i> Recortar imagem</h2>
+      <p class="cropper-help">
+        Ajuste a imagem dentro da área quadrada. Arraste para posicionar e use a roda do mouse ou os controles de zoom para aproximar ou afastar.
+        O upload só será feito depois de clicar em “Usar imagem”.
+      </p>
+      <div id="cropper-image-stage">
+        <img id="cropper-image" alt="Pré-visualização para recorte">
+      </div>
+      <div class="cropper-actions">
+        <button type="button" class="btn btn-ghost" id="cropper-cancelar">
+          <i class="fa-solid fa-xmark"></i> Cancelar seleção
+        </button>
+        <button type="button" class="btn btn-ghost" id="cropper-zoom-out" aria-label="Diminuir zoom">
+          <i class="fa-solid fa-magnifying-glass-minus"></i>
+        </button>
+        <button type="button" class="btn btn-ghost" id="cropper-zoom-in" aria-label="Aumentar zoom">
+          <i class="fa-solid fa-magnifying-glass-plus"></i>
+        </button>
+        <button type="button" class="btn btn-primary" id="cropper-confirmar">
+          <i class="fa-solid fa-check"></i> Usar imagem
+        </button>
+      </div>
+    </div>
+  </div>
+
   <div id="toast"></div>
 
   <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.2/cropper.min.js"></script>
 
   <script>
     const firebaseConfig = {
@@ -2351,69 +2465,217 @@
     }
 
 
-    document.getElementById("form-arquivos").addEventListener("change", async function () {
+    let cropperInstance = null;
+    let cropperObjectUrl = null;
+    let resolverRecorteAtual = null;
+    let arquivoAtualRecorte = null;
 
-      const arquivos = Array.from(this.files);
+    function limparRecortador() {
+      if (cropperInstance) {
+        cropperInstance.destroy();
+        cropperInstance = null;
+      }
+
+      if (cropperObjectUrl) {
+        URL.revokeObjectURL(cropperObjectUrl);
+        cropperObjectUrl = null;
+      }
+
+      const imagem = document.getElementById("cropper-image");
+      imagem.removeAttribute("src");
+      document.getElementById("cropper-modal").classList.remove("show");
+      document.getElementById("cropper-modal").setAttribute("aria-hidden", "true");
+    }
+
+    function abrirRecorteImagem(arquivo) {
+      return new Promise((resolve, reject) => {
+        if (typeof Cropper === "undefined") {
+          reject(new Error("Não foi possível carregar a ferramenta de recorte. Verifique sua conexão e recarregue a página."));
+          return;
+        }
+
+        limparRecortador();
+        resolverRecorteAtual = resolve;
+
+        const modal = document.getElementById("cropper-modal");
+        const imagem = document.getElementById("cropper-image");
+        cropperObjectUrl = URL.createObjectURL(arquivo);
+
+        imagem.onload = () => {
+          cropperInstance = new Cropper(imagem, {
+            aspectRatio: 1,
+            viewMode: 1,
+            dragMode: "move",
+            autoCropArea: 0.85,
+            responsive: true,
+            background: true,
+            movable: true,
+            zoomable: true,
+            zoomOnWheel: true,
+            cropBoxMovable: true,
+            cropBoxResizable: true,
+            toggleDragModeOnDblclick: false,
+            minContainerWidth: 250,
+            minContainerHeight: 220
+          });
+        };
+
+        imagem.onerror = () => {
+          limparRecortador();
+          resolverRecorteAtual = null;
+          reject(new Error("Não foi possível abrir esta imagem."));
+        };
+
+        imagem.src = cropperObjectUrl;
+        modal.classList.add("show");
+        modal.setAttribute("aria-hidden", "false");
+      });
+    }
+
+    function finalizarRecorte(cancelar = false) {
+      if (!resolverRecorteAtual) return;
+
+      const resolver = resolverRecorteAtual;
+      resolverRecorteAtual = null;
+
+      if (cancelar || !cropperInstance) {
+        limparRecortador();
+        resolver(null);
+        return;
+      }
+
+      try {
+        const tipoOriginal = (arquivoAtualRecorte?.type || "").toLowerCase();
+        const tipoSaida = tipoOriginal === "image/jpeg"
+          ? "image/jpeg"
+          : tipoOriginal === "image/webp"
+            ? "image/webp"
+            : "image/png";
+
+        const canvas = cropperInstance.getCroppedCanvas({
+          width: 800,
+          height: 800,
+          fillColor: tipoSaida === "image/jpeg" ? "#ffffff" : "transparent",
+          imageSmoothingEnabled: true,
+          imageSmoothingQuality: "high"
+        });
+
+        if (!canvas) {
+          limparRecortador();
+          resolver(null);
+          toast("Não foi possível gerar o recorte desta imagem.", "err");
+          return;
+        }
+
+        canvas.toBlob(blob => {
+          limparRecortador();
+
+          if (!blob) {
+            resolver(null);
+            toast("Não foi possível preparar a imagem recortada.", "err");
+            return;
+          }
+
+          const extensao = tipoSaida === "image/jpeg" ? "jpg" : tipoSaida === "image/webp" ? "webp" : "png";
+          const nomeBase = (arquivoAtualRecorte?.name || "imagem").replace(/\.[^.]+$/, "");
+          const arquivoRecortado = new File([blob], `${nomeBase}-recortada.${extensao}`, {
+            type: tipoSaida,
+            lastModified: Date.now()
+          });
+
+          resolver(arquivoRecortado);
+        }, tipoSaida, tipoSaida === "image/jpeg" || tipoSaida === "image/webp" ? 0.92 : undefined);
+      } catch (erro) {
+        limparRecortador();
+        resolver(null);
+        toast("Erro ao recortar imagem: " + erro.message, "err");
+      }
+    }
+
+    document.getElementById("cropper-cancelar").addEventListener("click", () => {
+      finalizarRecorte(true);
+      arquivoAtualRecorte = null;
+    });
+
+    document.getElementById("cropper-confirmar").addEventListener("click", () => {
+      finalizarRecorte(false);
+      arquivoAtualRecorte = null;
+    });
+
+    document.getElementById("cropper-zoom-in").addEventListener("click", () => {
+      if (cropperInstance) cropperInstance.zoom(0.1);
+    });
+
+    document.getElementById("cropper-zoom-out").addEventListener("click", () => {
+      if (cropperInstance) cropperInstance.zoom(-0.1);
+    });
+
+    document.getElementById("form-arquivos").addEventListener("change", async function () {
+      const arquivos = Array.from(this.files || []);
+      const status = document.getElementById("image-upload-status");
 
       if (!arquivos.length) return;
 
-      const status = document.getElementById("image-upload-status");
-
-      status.textContent = "Enviando imagens...";
-
+      const urls = [];
+      let cancelado = false;
       imagensEmUpload = arquivos.length;
 
       try {
+        for (let i = 0; i < arquivos.length; i++) {
+          const arquivo = arquivos[i];
 
-        const urls = [];
+          if (!arquivo.type.startsWith("image/")) {
+            throw new Error(`"${arquivo.name}" não é um arquivo de imagem válido.`);
+          }
 
-        for (const arquivo of arquivos) {
+          status.textContent = `Recorte a imagem ${i + 1} de ${arquivos.length}...`;
+          arquivoAtualRecorte = arquivo;
 
-          const url = await enviarImagem(arquivo);
+          const arquivoRecortado = await abrirRecorteImagem(arquivo);
+          arquivoAtualRecorte = null;
 
+          if (!arquivoRecortado) {
+            cancelado = true;
+            break;
+          }
+
+          status.textContent = `Enviando imagem ${i + 1} de ${arquivos.length}...`;
+          const url = await enviarImagem(arquivoRecortado);
           urls.push(url);
         }
 
-        const textarea = document.getElementById("form-imagem");
+        if (urls.length) {
+          const textarea = document.getElementById("form-imagem");
+          const imagensAtuais = textarea.value
+            .split(/\r?\n/)
+            .map(x => x.trim())
+            .filter(Boolean);
 
-        const imagensAtuais = textarea.value
-          .split(/\r?\n/)
-          .map(x => x.trim())
-          .filter(Boolean);
+          const todasImagens = [...imagensAtuais, ...urls];
+          textarea.value = todasImagens.join("\n");
+          renderImagePreview(todasImagens);
+        }
 
-        const todasImagens = [
-          ...imagensAtuais,
-          ...urls
-        ];
-
-        textarea.value = todasImagens.join("\n");
-
-        renderImagePreview(todasImagens);
-
-        status.textContent =
-          urls.length === 1
-            ? "Imagem enviada com sucesso!"
-            : `${urls.length} imagens enviadas com sucesso!`;
-
+        if (cancelado) {
+          status.textContent = urls.length
+            ? `${urls.length} imagem(ns) enviada(s). Seleção cancelada para as imagens restantes.`
+            : "Seleção de imagens cancelada.";
+        } else {
+          status.textContent = urls.length === 1
+            ? "Imagem recortada e enviada com sucesso!"
+            : `${urls.length} imagens recortadas e enviadas com sucesso!`;
+        }
       } catch (e) {
-
         console.error(e);
-
-        status.textContent = "";
-
-        toast(
-          "Erro ao enviar imagem: " + e.message,
-          "err"
-        );
-
+        status.textContent = urls.length
+          ? `${urls.length} imagem(ns) enviada(s). Ocorreu um erro no restante.`
+          : "";
+        toast("Erro ao processar imagem: " + e.message, "err");
       } finally {
-
         imagensEmUpload = 0;
-
-        // Permite selecionar novamente o mesmo arquivo
+        arquivoAtualRecorte = null;
         this.value = "";
       }
-
     });
 
     function fazerLogin() {
@@ -4485,8 +4747,25 @@
 
     function abrirModal(id) { document.getElementById(id).classList.add("show") }
     function fecharModal(id) { document.getElementById(id).classList.remove("show") }
-    document.querySelectorAll(".modal-overlay").forEach(o => o.addEventListener("click", e => { if (e.target === o) fecharModal(o.id) }));
-    document.addEventListener("keydown", e => { if (e.key === "Escape") document.querySelectorAll(".modal-overlay.show").forEach(o => fecharModal(o.id)) });
+    document.querySelectorAll(".modal-overlay").forEach(o => o.addEventListener("click", e => {
+      if (e.target !== o) return;
+      if (o.id === "cropper-modal") {
+        finalizarRecorte(true);
+        arquivoAtualRecorte = null;
+      } else {
+        fecharModal(o.id);
+      }
+    }));
+    document.addEventListener("keydown", e => {
+      if (e.key !== "Escape") return;
+      const cropModal = document.getElementById("cropper-modal");
+      if (cropModal.classList.contains("show")) {
+        finalizarRecorte(true);
+        arquivoAtualRecorte = null;
+        return;
+      }
+      document.querySelectorAll(".modal-overlay.show").forEach(o => fecharModal(o.id));
+    });
 
     function imprimirComprovante() {
       window.print();
