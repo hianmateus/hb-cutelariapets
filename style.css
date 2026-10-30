@@ -1154,61 +1154,523 @@
      color: #ffea00;
  }
 
- .SectionAbout {
+
+ /* ================================
+   SECTION ANTES E DEPOIS
+================================ */
+
+ .SectionAB {
+     width: 100%;
+     min-height: 90vh;
+     padding: 110px 5%;
+     display: flex;
+     justify-content: center;
+     align-items: center;
+     background: #f8f9fa;
+     overflow: hidden;
+     font-family: inherit;
+ }
+
+ .MainSecAB {
+     width: 100%;
+     max-width: 1520px;
+     position: relative;
+ }
+
+ /* ================================
+   HEADER
+================================ */
+
+ .HeaderSercAB {
+     width: 100%;
+     margin-bottom: 40px;
+ }
+
+ .HeaderTopAB {
+     display: flex;
+     align-items: center;
+     gap: 18px;
+     margin-bottom: 16px;
+ }
+
+ .GreenLineAB {
+     width: 62px;
+     height: 2px;
+     background: #00c900;
+     position: relative;
+ }
+
+ .GreenLineAB::after {
+     content: "";
+     position: absolute;
+     right: -2px;
+     top: -4px;
+     width: 10px;
+     height: 10px;
+     border-radius: 50%;
+     background: #00c900;
+ }
+
+ .TitleSecAB {
+     color: #008d24;
+     font-size: 16px;
+     font-weight: 800;
+     letter-spacing: 1px;
+     margin: 0;
+ }
+
+ .HeaderContentAB {
+     display: flex;
+     align-items: center;
+     justify-content: space-between;
+     gap: 30px;
+ }
+
+ .H2SevAB {
+     color: #202a30;
+     font-size: clamp(36px, 4vw, 58px);
+     line-height: 1.05;
+     font-weight: 850;
+     letter-spacing: -2px;
+     margin: 0 0 14px;
+ }
+
+ .H2SevAB span {
+     color: #00bd24;
+ }
+
+ .PSecAB {
+     color: #52606b;
+     font-size: 19px;
+     line-height: 1.5;
+     max-width: 680px;
+     margin: 0;
+ }
+
+
+
+ /* ================================
+   VÍDEOS
+================================ */
+
+ .SecShowAB {
+     display: grid;
+     grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) 220px;
+     align-items: center;
+     gap: 28px;
+     position: relative;
+     margin-top: 38px;
+ }
+
+ .ShowABvideo {
+     height: 430px;
+     position: relative;
+     border-radius: 20px;
+     overflow: hidden;
+     background: #101819;
+     box-shadow: 0 15px 35px rgba(0, 0, 0, 0.10);
+     border: 1px solid rgba(0, 180, 30, 0.35);
+     transition: transform 0.4s ease,
+         box-shadow 0.4s ease;
+ }
+
+ .ShowABvideo:hover {
+     transform: translateY(-6px);
+     box-shadow: 0 22px 45px rgba(0, 0, 0, 0.16);
+ }
+
+ .VideoAB {
+     width: 100%;
+     height: 100%;
+     object-fit: cover;
+     display: block;
+     transition: transform 0.7s ease;
+ }
+
+ .ShowABvideo:hover .VideoAB {
+     transform: scale(1.04);
+ }
+
+ /* Gradiente sobre os vídeos */
+
+ .ShowABvideo::after {
+     content: "";
+     position: absolute;
+     inset: 0;
+     background: linear-gradient(to bottom,
+             rgba(0, 0, 0, 0.12) 0%,
+             transparent 35%,
+             rgba(0, 0, 0, 0.05) 45%,
+             rgba(0, 0, 0, 0.88) 100%);
+     pointer-events: none;
+ }
+
+ /* ================================
+   ETIQUETAS
+================================ */
+
+ .VideoCategoryAB {
+     position: absolute;
+     top: 25px;
+     left: 25px;
+     z-index: 2;
+     display: flex;
+     align-items: center;
+     gap: 10px;
+     padding: 10px 16px;
+     border: 1px solid #00c900;
+     border-radius: 30px;
+     background: rgba(0, 0, 0, 0.65);
+     color: white;
+     font-size: 11px;
+     font-weight: 800;
+     letter-spacing: 1.5px;
+     backdrop-filter: blur(8px);
+ }
+
+ .VideoCategoryAB span {
+     color: #75e85a;
+     font-size: 17px;
+ }
+
+ /* ================================
+   PLAY CENTRAL
+================================ */
+
+ .VideoPlayAB {
+     position: absolute;
+     top: 50%;
+     left: 50%;
+     transform: translate(-50%, -50%);
+     width: 76px;
+     height: 76px;
+     border-radius: 50%;
+     border: 2px solid #00ce26;
+     background: rgba(0, 0, 0, 0.38);
+     backdrop-filter: blur(5px);
      display: flex;
      align-items: center;
      justify-content: center;
-     min-height: 90vh;
-     gap: 50px;
-     padding: 150px 20px;
+     z-index: 2;
+     color: white;
+     font-size: 25px;
+     padding-left: 4px;
+     pointer-events: none;
+     box-shadow: 0 0 20px rgba(0, 210, 30, 0.15);
+     transition: 0.3s ease;
  }
 
- .DivImageAbout {
-     border-radius: 25px;
-     background-color: #3c3c3c;
-     height: 500px;
+ .ShowABvideo:hover .VideoPlayAB {
+     background: rgba(0, 190, 30, 0.85);
+     transform: translate(-50%, -50%) scale(1.1);
  }
 
- .AboutImage {
-     height: 100%;
-     max-width: 30%;
-     border-radius: 25px;
+ /* ================================
+   TEXTOS DOS VÍDEOS
+================================ */
+
+ .TextsShowAB {
+     position: absolute;
+     bottom: 0;
+     left: 0;
+     width: 100%;
+     padding: 25px 30px 28px;
+     z-index: 3;
  }
 
- .TextsAbout {
-     width: 40%;
+ .pShowAB1 {
+     color: white;
+     font-size: 25px;
+     font-weight: 800;
+     letter-spacing: -1px;
+     margin: 0 0 10px;
  }
 
- .TitleAbout {
-     margin-bottom: 15px;
-     font-weight: bold;
-     color: #212121;
+ .pShowAB1 span {
+     color: #00d52b;
+ }
+
+ .pShowAB2 {
+     color: #f2f2f2;
+     font-size: 14px;
+     font-weight: 500;
+     margin: 0;
+     display: flex;
+     align-items: center;
+     gap: 9px;
+     flex-wrap: wrap;
+ }
+
+ .pShowAB2 span {
+     color: white;
+     font-size: 19px;
+ }
+
+ .pShowAB2 b {
+     color: #00d52b;
+ }
+
+ /* Linha verde inferior */
+
+ .TextsShowAB::after {
+     content: "";
+     display: block;
+     width: 68px;
+     height: 4px;
+     background: #00d52b;
+     border-radius: 5px;
+     margin-top: 23px;
+ }
+
+ /* ================================
+   BENEFÍCIOS LATERAIS
+================================ */
+
+ .BenefitsAB {
+     height: 90%;
+     border-left: 1px solid #e5e8e9;
+     padding-left: 27px;
+     display: flex;
+     flex-direction: column;
+     justify-content: space-around;
+     gap: 20px;
+ }
+
+ .BenefitItemAB {
+     display: flex;
+     flex-direction: column;
+     align-items: flex-start;
+ }
+
+ .BenefitIconAB {
+     width: 49px;
+     height: 49px;
+     background: white;
+     border-radius: 50%;
+     box-shadow: 0 5px 20px rgba(0, 0, 0, 0.06);
+     display: flex;
+     align-items: center;
+     justify-content: center;
+     color: #009b27;
+     font-size: 25px;
+     margin-bottom: 10px;
+ }
+
+ .BenefitItemAB h3 {
+     color: #263139;
      font-size: 20px;
+     font-weight: 750;
+     margin: 0 0 5px;
  }
 
- .BGreen {
-     margin-bottom: 22px;
-     color: #00d000;
+ .BenefitItemAB p {
+     color: #71808a;
+     font-size: 20px;
+     line-height: 1.5;
+     margin: 0;
  }
 
- .H2About {
+ /* ================================
+   SETAS LATERAIS
+================================ */
+
+ .ArrowAB {
+     position: absolute;
+     z-index: 5;
+     top: 50%;
+     transform: translateY(-50%);
+     width: 52px;
+     height: 52px;
+     border: none;
+     border-radius: 50%;
+     background: white;
+     color: #009b27;
      font-size: 35px;
-     line-height: 34px;
-     margin-bottom: 15px;
-     font-weight: bold;
+     line-height: 1;
+     box-shadow: 0 5px 20px rgba(0, 0, 0, 0.10);
+     display: flex;
+     align-items: center;
+     justify-content: center;
+     cursor: pointer;
+     transition: 0.3s ease;
  }
 
- .PAbout {}
-
- .ULAbout {
-     padding-left: 25px;
-     margin-top: 25px;
+ .ArrowAB:hover {
+     background: #009b27;
+     color: white;
  }
 
- .LiAbout {
-     color: black;
-     font-weight: 700;
+ .ArrowLeftAB {
+     left: -80px;
  }
+
+ .ArrowRightAB {
+     right: 192px;
+ }
+
+ /* ================================
+   INDICADORES INFERIORES
+================================ */
+
+ .SliderDotsAB {
+     display: flex;
+     justify-content: center;
+     align-items: center;
+     gap: 13px;
+     margin-top: 85px;
+ }
+
+ .SliderDotsAB span {
+     width: 32px;
+     height: 5px;
+     border-radius: 10px;
+     background: #d5dadd;
+ }
+
+ .SliderDotsAB .ActiveDotAB {
+     background: #009b27;
+     width: 200px;
+ }
+
+ /* ================================
+   RESPONSIVIDADE
+================================ */
+
+ @media (max-width: 1200px) {
+
+     .SecShowAB {
+         grid-template-columns: 1fr 1fr;
+     }
+
+     .BenefitsAB {
+         grid-column: 1 / -1;
+         flex-direction: row;
+         border-left: none;
+         border-top: 1px solid #e5e8e9;
+         padding: 25px 0 0;
+         height: auto;
+     }
+
+     .BenefitItemAB {
+         flex: 1;
+     }
+
+     .ArrowRightAB {
+         right: -15px;
+     }
+
+     .ArrowLeftAB {
+         left: -15px;
+     }
+ }
+
+ @media (max-width: 768px) {
+
+     .SectionAB {
+         padding: 80px 20px;
+     }
+
+     .HeaderContentAB {
+         flex-direction: column;
+         align-items: flex-start;
+     }
+
+     .H2SevAB {
+         font-size: 38px;
+         letter-spacing: -1.5px;
+     }
+
+     .PSecAB {
+         font-size: 16px;
+     }
+
+     .WatchVideosAB {
+         margin: 15px 0 0;
+     }
+
+     .SecShowAB {
+         grid-template-columns: 1fr;
+         gap: 22px;
+     }
+
+     .ShowABvideo {
+         height: 390px;
+     }
+
+     .BenefitsAB {
+         flex-direction: column;
+         gap: 25px;
+     }
+
+     .BenefitItemAB {
+         display: grid;
+         grid-template-columns: 55px 1fr;
+         column-gap: 12px;
+         align-items: center;
+     }
+
+     .BenefitIconAB {
+         grid-row: 1 / 3;
+         margin: 0;
+     }
+
+     .BenefitItemAB h3 {
+         align-self: end;
+     }
+
+     .BenefitItemAB p {
+         align-self: start;
+     }
+
+     .ArrowAB {
+         display: none;
+     }
+
+     .SliderDotsAB {
+         margin-top: 30px;
+     }
+ }
+
+ @media (max-width: 480px) {
+
+     .SectionAB {
+         padding: 65px 16px;
+     }
+
+     .H2SevAB {
+         font-size: 33px;
+     }
+
+     .ShowABvideo {
+         height: 340px;
+         border-radius: 15px;
+     }
+
+     .TextsShowAB {
+         padding: 20px;
+     }
+
+     .pShowAB1 {
+         font-size: 22px;
+     }
+
+     .pShowAB2 {
+         font-size: 12px;
+         gap: 6px;
+     }
+
+     .VideoCategoryAB {
+         top: 17px;
+         left: 17px;
+     }
+
+     .VideoPlayAB {
+         width: 62px;
+         height: 62px;
+     }
+
+ }
+
 
 
 
@@ -1301,9 +1763,7 @@
 
  .MainSecAB {}
 
- .HeaderSercAB {
-     padding-left: 120px;
- }
+
 
  .VideoAB {
      width: 100%;
@@ -1341,14 +1801,14 @@
      border: solid 1px;
      border-radius: 15px;
      background-color: rgb(44, 44, 44);
-     height: 600px;
+     height: 500px;
      position: relative;
+     width: 400px;
  }
 
  .TextsShowAB {
      padding: 10px;
      width: 100%;
-     background-color: white;
      position: absolute;
      bottom: 0;
      border-bottom-left-radius: 15px;
@@ -1360,6 +1820,431 @@
  }
 
  .pShowAB2 {}
+
+
+
+
+
+ /* ========================================
+   SECTION ABOUT
+======================================== */
+
+ .SectionAbout {
+     width: 100%;
+     min-height: 90vh;
+     padding: 110px 8%;
+     display: flex;
+     align-items: center;
+     justify-content: center;
+     gap: 6%;
+     background: #f8f9fa;
+     overflow: hidden;
+ }
+
+
+ /* ========================================
+   IMAGEM
+======================================== */
+
+ .AboutImageContainer {
+     width: 3009x;
+     height: 600px;
+     max-width: 600px;
+     min-width: 0;
+     position: relative;
+     flex-shrink: 0;
+     border-radius: 25px;
+     overflow: hidden;
+     background: #101414;
+     border: 1px solid rgba(0, 200, 30, 0.35);
+     box-shadow: 0 20px 45px rgba(0, 0, 0, 0.10);
+     transition: 0.4s ease;
+ }
+
+ .AboutImageContainer:hover {
+     box-shadow: 0 25px 55px rgba(0, 180, 30, 0.16);
+     transform: translateY(-5px);
+ }
+
+ .AboutImage {
+     width: 100%;
+     height: 100%;
+     object-fit: cover;
+     display: block;
+     transition: transform 0.8s ease;
+ }
+
+ .AboutImageContainer:hover .AboutImage {
+     transform: scale(1.04);
+ }
+
+
+ /* ========================================
+   OVERLAY DA IMAGEM
+======================================== */
+
+ .AboutImageOverlay {
+     position: absolute;
+     inset: 0;
+     background: linear-gradient(to bottom,
+             rgba(0, 0, 0, 0.12) 0%,
+             transparent 35%,
+             rgba(0, 0, 0, 0.05) 50%,
+             rgba(0, 0, 0, 0.88) 100%);
+     pointer-events: none;
+ }
+
+
+ /* ========================================
+   BADGE SUPERIOR
+======================================== */
+
+ .AboutBadge {
+     position: absolute;
+     top: 27px;
+     left: 27px;
+     display: flex;
+     align-items: center;
+     gap: 10px;
+     padding: 12px 17px;
+     border: 1px solid #00c923;
+     border-radius: 30px;
+     background: rgba(0, 0, 0, 0.65);
+     color: white;
+     font-size: 11px;
+     font-weight: 800;
+     letter-spacing: 1px;
+     backdrop-filter: blur(8px);
+ }
+
+ .BadgeIcon {
+     color: #75e85a;
+     font-size: 17px;
+ }
+
+
+ /* ========================================
+   TEXTO SOBRE A IMAGEM
+======================================== */
+
+ .AboutImageText {
+     position: absolute;
+     bottom: 30px;
+     left: 30px;
+     z-index: 2;
+ }
+
+ .AboutImageText h3 {
+     color: white;
+     font-size: 24px;
+     font-weight: 800;
+     line-height: 1.25;
+     margin: 0;
+     letter-spacing: -0.5px;
+ }
+
+ .AboutImageText h3 span {
+     display: block;
+     color: #00d52b;
+ }
+
+ .AboutImageLine {
+     width: 60px;
+     height: 5px;
+     background: #00d52b;
+     border-radius: 5px;
+     margin-top: 18px;
+ }
+
+
+ /* ========================================
+   CONTEÚDO
+======================================== */
+
+ .TextsAbout {
+     width: 50%;
+     max-width: 680px;
+ }
+
+
+ /* ========================================
+   TÍTULO SUPERIOR
+======================================== */
+
+ .AboutTitleWrapper {
+     display: flex;
+     align-items: center;
+     gap: 16px;
+     margin-bottom: 20px;
+ }
+
+ .AboutGreenLine {
+     width: 50px;
+     height: 3px;
+     background: #00b928;
+     position: relative;
+     flex-shrink: 0;
+ }
+
+ .AboutGreenLine::after {
+     content: "";
+     position: absolute;
+     right: -3px;
+     top: -3px;
+     width: 9px;
+     height: 9px;
+     background: #00b928;
+     border-radius: 50%;
+ }
+
+ .TitleAbout {
+     color: #20272d;
+     font-size: 16px;
+     font-weight: 800;
+     letter-spacing: 1px;
+     margin: 0;
+ }
+
+ .BGreen {
+     color: #00bd24;
+ }
+
+
+ /* ========================================
+   TÍTULO PRINCIPAL
+======================================== */
+
+ .H2About {
+     color: #202a32;
+     font-size: 32px;
+     font-weight: 900;
+     line-height: 1.02;
+     letter-spacing: -1.8px;
+     margin: 0 0 25px;
+ }
+
+ .H2About span {
+     color: #00bd24;
+ }
+
+
+ /* ========================================
+   DESCRIÇÃO
+======================================== */
+
+ .PAbout {
+     color: #536474;
+     font-size: 17px;
+     line-height: 1.8;
+     font-weight: 400;
+     margin: 0 0 25px;
+ }
+
+
+ /* ========================================
+   BENEFÍCIOS
+======================================== */
+
+ .AboutBenefits {
+     display: flex;
+     flex-direction: column;
+     gap: 23px;
+     margin-top: 25px;
+ }
+
+ .AboutBenefit {
+     display: flex;
+     align-items: center;
+     gap: 20px;
+ }
+
+
+ /* ========================================
+   ÍCONES DOS BENEFÍCIOS
+======================================== */
+
+ .AboutBenefitIcon {
+     width: 70px;
+     height: 70px;
+     min-width: 70px;
+     border-radius: 50%;
+     display: flex;
+     align-items: center;
+     justify-content: center;
+     background: #f0fff3;
+     border: 1px solid #d6f5dc;
+     box-shadow: 0 5px 15px rgba(0, 170, 30, 0.10);
+     color: #009b27;
+     font-size: 32px;
+     transition: 0.3s ease;
+ }
+
+ .AboutBenefit:hover .AboutBenefitIcon {
+     background: #009b27;
+     color: white;
+     transform: scale(1.08);
+ }
+
+
+ /* ========================================
+   TEXTOS DOS BENEFÍCIOS
+======================================== */
+
+ .AboutBenefitText h3 {
+     color: #263748;
+     font-size: 16px;
+     font-weight: 800;
+     line-height: 1.4;
+     margin: 0 0 5px;
+ }
+
+ .AboutBenefitText p {
+     color: #687b8d;
+     font-size: 14px;
+     line-height: 1.5;
+     margin: 0;
+ }
+
+
+ /* ========================================
+   RESPONSIVIDADE
+======================================== */
+
+ @media (max-width: 1100px) {
+
+     .SectionAbout {
+         padding: 90px 5%;
+         gap: 4%;
+     }
+
+     .AboutImageContainer {
+         width: 43%;
+         height: 580px;
+     }
+
+     .TextsAbout {
+         width: 53%;
+     }
+
+     .H2About {
+         font-size: 36px;
+     }
+
+     .PAbout {
+         font-size: 15px;
+     }
+
+     .AboutBenefitIcon {
+         width: 60px;
+         height: 60px;
+         min-width: 60px;
+     }
+
+     .AboutBenefitText h3 {
+         font-size: 14px;
+     }
+
+ }
+
+
+ @media (max-width: 768px) {
+
+     .SectionAbout {
+         flex-direction: column;
+         padding: 75px 22px;
+         gap: 45px;
+     }
+
+     .AboutImageContainer {
+         width: 100%;
+         max-width: 550px;
+         height: 560px;
+     }
+
+     .TextsAbout {
+         width: 100%;
+         max-width: 550px;
+     }
+
+     .H2About {
+         font-size: 38px;
+         letter-spacing: -1px;
+     }
+
+     .PAbout {
+         font-size: 16px;
+         line-height: 1.7;
+     }
+
+     .AboutBenefits {
+         gap: 25px;
+     }
+
+ }
+
+
+ @media (max-width: 480px) {
+
+     .SectionAbout {
+         padding: 60px 17px;
+         gap: 35px;
+     }
+
+     .AboutImageContainer {
+         height: 450px;
+         border-radius: 18px;
+     }
+
+     .AboutBadge {
+         top: 18px;
+         left: 18px;
+         padding: 10px 13px;
+         font-size: 9px;
+     }
+
+     .AboutImageText {
+         left: 20px;
+         bottom: 22px;
+     }
+
+     .AboutImageText h3 {
+         font-size: 21px;
+     }
+
+     .H2About {
+         font-size: 32px;
+         line-height: 1.08;
+     }
+
+     .TitleAbout {
+         font-size: 13px;
+     }
+
+     .PAbout {
+         font-size: 15px;
+     }
+
+     .AboutBenefit {
+         gap: 14px;
+     }
+
+     .AboutBenefitIcon {
+         width: 54px;
+         height: 54px;
+         min-width: 54px;
+         font-size: 25px;
+     }
+
+     .AboutBenefitText h3 {
+         font-size: 14px;
+     }
+
+     .AboutBenefitText p {
+         font-size: 13px;
+     }
+
+ }
+
 
 
 
@@ -3059,7 +3944,7 @@
      }
 
      .AboutImage {
-         max-width: 70%;
+         max-width: 100%;
      }
 
      .TextsAbout {
@@ -3130,7 +4015,9 @@
          flex-direction: column;
      }
 
-     .ShowABvideo {}
+     .ShowABvideo {
+         width: 350px
+     }
 
      .TextsShowAB {}
 
