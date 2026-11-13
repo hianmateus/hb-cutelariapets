@@ -1170,9 +1170,23 @@ document.addEventListener("DOMContentLoaded", async () => {
                 "modalProductPrice"
             );
 
-        if (price)
-            price.textContent =
-                formatarMoeda(produto.preco);
+        if (price) {
+
+            const precoOriginal =
+                Number(produto.precoOriginal);
+
+            const possuiPrecoOriginal =
+                produto.offer === true &&
+                Number.isFinite(precoOriginal) &&
+                precoOriginal > Number(produto.preco);
+
+            price.innerHTML = `
+        ${possuiPrecoOriginal
+                    ? `<span class="ProductModalOriginalPrice">${formatarMoeda(precoOriginal)}</span>`
+                    : ""}
+        <span class="ProductModalCurrentPrice">${formatarMoeda(produto.preco)}</span>
+    `;
+        }
 
 
         // ----------------------------------------------------
@@ -1443,6 +1457,17 @@ document.addEventListener("DOMContentLoaded", async () => {
         `
             : "";
 
+        const precoOriginal = Number(p.precoOriginal);
+
+        const possuiPrecoOriginal =
+            emOferta &&
+            Number.isFinite(precoOriginal) &&
+            precoOriginal > Number(p.preco);
+
+        const precoOriginalHTML = possuiPrecoOriginal
+            ? `<span class="product-original-price">${formatarMoeda(precoOriginal)}</span>`
+            : "";
+
         return `
         <div
             class="product-card ${emOferta ? "has-offer" : ""}"
@@ -1472,9 +1497,12 @@ document.addEventListener("DOMContentLoaded", async () => {
                 </p>
 
                 <div class="bottomtexts">
-                <p class="product-price ${emOferta ? "product-price-offer" : ""}">
-                    ${formatarMoeda(p.preco)}
-                </p>
+                <div class="product-prices">
+    ${precoOriginalHTML}
+    <p class="product-price ${emOferta ? "product-price-offer" : ""}">
+        ${formatarMoeda(p.preco)}
+    </p>
+</div>
 
                 <button
                     class="product-button"
@@ -1631,6 +1659,17 @@ document.addEventListener("DOMContentLoaded", async () => {
                 `
                         : "";
 
+                    const precoOriginal = Number(p.precoOriginal);
+
+                    const possuiPrecoOriginal =
+                        emOferta &&
+                        Number.isFinite(precoOriginal) &&
+                        precoOriginal > Number(p.preco);
+
+                    const precoOriginalHTML = possuiPrecoOriginal
+                        ? `<span class="product-original-price">${formatarMoeda(precoOriginal)}</span>`
+                        : "";
+
 
                     return `
                 <div
@@ -1661,9 +1700,12 @@ document.addEventListener("DOMContentLoaded", async () => {
                             ${p.descricao}
                         </p>
 
-                        <p class="product-price ${emOferta ? "product-price-offer" : ""}">
-                            ${formatarMoeda(p.preco)}
-                        </p>
+                        <div class="product-prices">
+    ${precoOriginalHTML}
+    <p class="product-price ${emOferta ? "product-price-offer" : ""}">
+        ${formatarMoeda(p.preco)}
+    </p>
+</div>
 
                         <button
                             class="product-button"
